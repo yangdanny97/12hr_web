@@ -90,20 +90,18 @@
         skip.remove();
         d3.selectAll("h2").remove();
         to.forEach((id) => clearTimeout(id));
-        for (var i = 0; i < sentences.length; i++) {
-            let s = sentences[i];
-            display.append("h2").attr("class","typewriter-finished").text(s);
-        }
+        setup();
     });
 
-    setTimeout(() => {
+    function setup(){
         display.remove();
         d3.select("#top").append("div").attr("class", "topbtn col-sm-2 offset-sm-10").text("ABOUT");
         var bottom = d3.select("#bottom");
         bottom.append("h1").text("Project Name Here");
         var link = bottom.append("a").attr("href", "./vis");
         link.append("h3").text("Start Exploring");
-    }, 3000 * sentences.length + 500);
+    }
+    to.push(setTimeout(setup, 3000 * sentences.length + 500));
 </script>
 
 </html>
