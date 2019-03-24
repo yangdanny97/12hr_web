@@ -1,4 +1,21 @@
-//https://codepen.io/osublake/pen/vdzjyg
+var animationLock = false;
+var currentDepth = 0;
+
+//lock for animations
+function acquire() {
+    if (animationLock == false) {
+        animationLock = true;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function release() {
+    animationLock = false;
+}
+
+//https://codepen.io/osublake/pen/vdzjyg (making blobs with d3)
 function getBlobPath(options) {
     var points = [];
     var slice = (Math.PI * 2) / options.numPoints;
@@ -14,7 +31,7 @@ function getBlobPath(options) {
         points.push(point);
     }
     options.points = points;
-    return  cardinal(points, true, 1);
+    return cardinal(points, true, 1);
 }
 
 // Cardinal spline - a uniform Catmull-Rom spline with a tension option
@@ -49,144 +66,132 @@ let nodes = [{
         "key": "",
         "id": "Mind Map",
         "url": "Mind_Map",
-        "brush": "silver"
+        "brush": "silver",
+        "txtcolor": "black",
     },
     {
         "key": 1,
         "parent": 0,
-        "id": "Getting more time",
+        "id": "Heart",
         "url": "Getting_more_time",
-        "brush": "skyblue",
+        "brush": "blue",
+        "txtcolor": "white",
     },
     {
         "key": 11,
         "parent": 1,
         "id": "Wake up early",
         "url": "Wake_up_early",
-        "brush": "skyblue",
+        "brush": "blue",
+        "txtcolor": "white",
     },
     {
         "key": 12,
         "parent": 1,
         "id": "Delegate",
         "url": "Delegate",
-        "brush": "skyblue",
+        "brush": "blue",
+        "txtcolor": "white",
     },
     {
         "key": 13,
         "parent": 1,
         "id": "Simplify",
         "url": "Simplify",
-        "brush": "skyblue",
+        "brush": "blue",
+        "txtcolor": "white",
     },
     {
         "key": 2,
         "parent": 0,
-        "id": "More effective use",
+        "id": "Mind",
         "url": "More_effective_use",
-        "brush": "darkseagreen",
+        "brush": "indigo",
+        "txtcolor": "white",
     },
     {
         "key": 21,
         "parent": 2,
         "id": "Planning",
         "url": "Planning",
-        "brush": "darkseagreen",
+        "brush": "indigo",
+        "txtcolor": "white",
     },
     {
         "key": 211,
         "parent": 21,
         "id": "Priorities",
         "url": "Priorities",
-        "brush": "darkseagreen",
+        "brush": "indigo",
+        "txtcolor": "white",
     },
     {
         "key": 212,
         "parent": 21,
         "id": "Ways to focus",
         "url": "Ways_to_focus",
-        "brush": "darkseagreen",
+        "brush": "indigo",
+        "txtcolor": "white",
     },
     {
         "key": 22,
         "parent": 2,
         "id": "Goals",
         "url": "Goals",
-        "brush": "darkseagreen",
+        "brush": "indigo",
+        "txtcolor": "white",
     },
     {
         "key": 3,
         "parent": 0,
-        "id": "Time wasting",
+        "id": "Soul",
         "url": "Time_wasting",
-        "brush": "palevioletred",
+        "brush": "deeppink",
+        "txtcolor": "white",
     },
     {
         "key": 31,
         "parent": 3,
         "id": "Too many meetings",
         "url": "Too_many_meetings",
-        "brush": "palevioletred",
+        "brush": "deeppink",
+        "txtcolor": "white",
     },
     {
         "key": 32,
         "parent": 3,
         "id": "Too much time spent on details",
         "url": "Too_much_time_spent_on_details",
-        "brush": "palevioletred",
+        "brush": "deeppink",
+        "txtcolor": "white",
     },
     {
         "key": 33,
         "parent": 3,
         "id": "Message fatigue",
         "url": "Message_fatigue",
-        "brush": "palevioletred",
+        "brush": "deeppink",
+        "txtcolor": "white",
     },
     {
         "key": 331,
         "parent": 31,
         "id": "Check messages less",
         "url": "Check_messages_less",
-        "brush": "palevioletred",
+        "brush": "deeppink",
+        "txtcolor": "white",
     },
     {
         "key": 332,
         "parent": 31,
         "id": "Message filters",
         "url": "Message_filters",
-        "brush": "palevioletred",
+        "brush": "deeppink",
+        "txtcolor": "white",
     },
-    {
-        "key": 4,
-        "parent": 0,
-        "id": "Key issues",
-        "url": "Key_issues",
-        "brush": "coral",
-    },
-    {
-        "key": 41,
-        "parent": 4,
-        "id": "Methods",
-        "url": "Methods",
-        "brush": "coral",
-    },
-    {
-        "key": 42,
-        "parent": 4,
-        "id": "Deadlines",
-        "url": "Deadlines",
-        "brush": "coral",
-    },
-    {
-        "key": 43,
-        "parent": 4,
-        "id": "Checkpoints",
-        "url": "Checkpoints",
-        "brush": "coral",
-    }
 ];
 
-
+//some preprocessing
 nodes.forEach((d) => d.depth = d.key.toString().length);
 
 let links = [];
@@ -207,30 +212,22 @@ var background = svg.append("rect")
     .attr("width", width)
     .attr("height", height)
     .attr("stroke", "black")
-    .attr("fill", "steelblue");
+    .style("opacity", 0.5)
+    .attr("fill", "white");
 var zoomable_layer = svg.append("g");
 var offsetX, offsetY, zoomLevel;
-
-function reset() {
-    var x = width / 2,
-        y = height / 2,
-        k = 0.5;
-    d3.selectAll(".nodes").classed("hidden", false);
-    zoomable_layer.transition()
-        .duration(1000)
-        .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x) * (k - 1) + "," + (-y) * (k - 1) + ")");
-}
-
-svg.on("click", reset);
 
 var maxNodeSize = 120;
 
 var widthScale = d3.scaleLinear().domain([0, 5]).range([maxNodeSize, maxNodeSize / 5]);
 
+var overlay;
+
+//define forces
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id((d) => d.id)
         .strength(1)
-        .distance((d) => 30) //widthScale(d.source.depth) + widthScale(d.target.depth) - 25)
+        .distance((d) => 30)
     )
     .force("charge", d3.forceManyBody().strength(-6000))
     .force("centerX", d3.forceX(width / 2)
@@ -244,13 +241,14 @@ var simulation = d3.forceSimulation()
     )
     .stop();
 
+//create nodes and links
 var link = zoomable_layer.append("g")
     .selectAll("line")
     .data(links)
     .enter().append("line")
     .attr("stroke", "silver")
     .attr("class", "links")
-    .attr("stroke-width", 1);
+    .attr("stroke-width", 0);
 
 var node = zoomable_layer.append("g")
     .selectAll("g")
@@ -265,8 +263,8 @@ var blobs = node.append("path")
         numPoints: 10,
         centerX: 0,
         centerY: 0,
-        minRadius:  widthScale(d.depth) * 0.75,
-        maxRadius:  widthScale(d.depth) * 1,
+        minRadius: widthScale(d.depth) * 0.75,
+        maxRadius: widthScale(d.depth) * 1,
     }))
     .attr("stroke", (d) => d.brush)
     .attr("class", "pulse");
@@ -276,14 +274,16 @@ var labels = node.append("text")
     .attr('text-anchor', "middle")
     .attr('x', 0)
     .attr('y', 0)
-    .style("opacity", 1);
+    .attr("fill", (d) => d.hasOwnProperty("txtcolor") ? d.txtcolor : "black")
+    .style("opacity", (d) => Math.abs(d.depth - currentDepth) > 1.5 ? 0 : 0.8);
 
+//set up simlation
 simulation.nodes(nodes);
 simulation.force("link")
     .links(links);
 
 for (var i = 0; i < 600; ++i) simulation.tick();
-
+//place nodes and links in final positions
 link.attr("x1", function (d) {
         return d.source.x;
     })
@@ -301,20 +301,65 @@ node.attr("transform", function (d) {
     return "translate(" + d.x + "," + d.y + ")";
 });
 
-node.on('click', function (d) {
-    console.log(d3.select(".nodes"));
-    d3.selectAll(".nodes").classed("hidden", false);
-    d3.event.stopPropagation();
-    var x = d.x,
-        y = d.y,
-        k = maxNodeSize / widthScale(d.depth) * 2;
+//event handlers
+node.on('click', nodeClick);
+background.on("click", backgroundClick);
 
-    zoomable_layer.transition()
-        .duration(1000)
-        .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
-    d3.select("#" + d.url).classed("hidden", true);
-});
+function nodeClick(d) {
+    if (acquire()) {
+        if (typeof overlay != "undefined"){
+            overlay.remove();
+        }
+        d3.selectAll(".nodes").classed("hidden", false);
+        d3.event.stopPropagation();
+        var x = d.x,
+            y = d.y,
+            k = maxNodeSize / widthScale(d.depth) * 2;
+        if (d.depth == 0) {
+            k = 1;
+        }
+        if (d.depth >= 2) {
+            d3.select("#" + d.url).classed("hidden", true);
+        }
+        currentDepth = d.depth;
 
+        labels.transition()
+            .duration(500).style("opacity", (d) => Math.abs(d.depth - currentDepth) > 1.5 ? 0 : 0.8);
+
+        zoomable_layer.transition()
+            .duration(1000)
+            .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
+
+        background.transition()
+            .duration(1000)
+            .attr("fill", d.brush);
+        setTimeout(release, 1000);
+    }
+}
+
+function backgroundClick() {
+    if (acquire()) {
+        if (typeof overlay != "undefined"){
+            overlay.remove();
+        }
+        var x = width / 2,
+            y = height / 2,
+            k = 0.5;
+        d3.selectAll(".nodes").classed("hidden", false);
+        currentDepth = 0;
+        labels.transition()
+            .duration(500).style("opacity", (d) => Math.abs(d.depth - currentDepth) > 1.5 ? 0 : 0.8);
+        zoomable_layer.transition()
+            .duration(1000)
+            .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x) * (k - 1) + "," + (-y) * (k - 1) + ")");
+        background.transition()
+            .duration(1000)
+            .attr("fill", "white");
+        setTimeout(release, 1000);
+    }
+}
+
+//allow zooming to specific nodes with # in the URL
 let url = window.location.href;
 if (url.lastIndexOf("#") >= 0) {
     let element_id = url.substring(url.lastIndexOf('#'));
