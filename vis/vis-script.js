@@ -350,8 +350,9 @@ function nodeClick(d) {
         if (d.depth == 0) {
             k = 1;
         }
-        if (d.depth >= 2) {
-            d3.select("#" + d.url).classed("hidden", true);
+        else { //deeper nodes get clicked cause graph to fade out and create overlay
+            d3.selectAll(".nodes").classed("hidden", true);
+            setTimeout(() => createOverlay(d), 500);
         }
         currentDepth = d.depth;
 
@@ -365,7 +366,8 @@ function nodeClick(d) {
         background.transition()
             .duration(1000)
             .attr("fill", d.brush);
-        setTimeout(release, 1000);
+        
+        setTimeout(release, 2000);
     }
 }
 
@@ -389,6 +391,117 @@ function backgroundClick() {
             .attr("fill", "white");
         setTimeout(release, 1000);
     }
+}
+
+function createOverlay(node){
+    //console.log(links);
+    //Links: source is always the parent, target is always the child
+    var parentLinks = links.filter((l) => l.target.id == node.id);
+    var childrenLinks = links.filter((l) => l.source.id == node.id);
+    var siblings = nodes.filter((n) => n.id != node.id && node.hasOwnProperty("parent") && n.parent == node.parent);
+
+    overlay = svg.append("g");
+
+    var overlay_bg1 = overlay.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "white")
+    .style("opacity", 0)
+    var overlay_bg2 = overlay.append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", node.brush)
+    .style("opacity", 0)
+    .on("click", backgroundClick);
+
+    overlay_bg1.transition()
+    .duration(1000)
+    .style("opacity", 1);
+    overlay_bg2.transition()
+    .duration(1000)
+    .style("opacity", 0.5);
+
+    if (parentLinks.length > 0){ //node has parent
+        var parentLink = parentLinks[0];
+        var ppos = calculateOverlayPosition(parentLink.target, parentLink.source);
+        var pgroup = overlay.append("g");
+        var pnode = pgroup.append("path")
+        .attr("fill", parentLink.source.brush)
+        .attr("d", getBlobPath({
+            numPoints: 10,
+            centerX: ppos[0],
+            centerY: ppos[1],
+            minRadius: width/7,
+            maxRadius: width/7 * 1.2,
+        }))
+        .attr("stroke", parentLink.source.brush)
+        .attr("class", "pulse")
+        .style("opacity", 0);
+
+        var plabel = pgroup.append("text")
+        .text(parentLink.source.id)
+        .attr('text-anchor', "middle")
+        .attr('x', ppos[0] + (width/2 - ppos[0]) * 0.1)
+        .attr('y', ppos[1] + (height/2 - ppos[1]) * 0.2)
+        .attr("font-size", "24px")
+        .attr("fill", parentLink.source.hasOwnProperty("txtcolor") ? parentLink.source.txtcolor : "black")
+        .style("opacity", 0);
+
+        pnode.transition().duration(1000).style("opacity", 1);
+        plabel.transition().duration(1000).style("opacity", 1);
+        pgroup.on("click", () => {
+            d3.select("#" + parentLink.source.url).dispatch('click')
+        });
+    }
+
+    if (childrenLinks.length > 0){ //node has children
+        childrenLinks.forEach((l) => {
+            var cpos = calculateOverlayPosition(l.source, l.target);
+            var cgroup = overlay.append("g");
+
+            var cnode = cgroup.append("path")
+            .attr("fill", l.target.brush)
+            .attr("d", getBlobPath({
+                numPoints: 10,
+                centerX: cpos[0],
+                centerY: cpos[1],
+                minRadius: width/7 * 0.75,
+                maxRadius: width/7,
+            }))
+            .attr("stroke", l.target.brush)
+            .attr("class", "pulse")
+            .style("opacity", 0);
+
+            var clabel = cgroup.append("text")
+            .text(l.target.id)
+            .attr('text-anchor', "middle")
+            .attr('x', cpos[0] + (width/2 - cpos[0]) * 0.1)
+            .attr('y', cpos[1] + (height/2 - cpos[1]) * 0.2)
+            .attr("font-size", "24px")
+            .attr("fill", l.target.hasOwnProperty("txtcolor") ? l.target.txtcolor : "black")
+            .style("opacity", 0);
+
+            cnode.transition().duration(1000).style("opacity", 1);
+            clabel.transition().duration(1000).style("opacity", 1);
+            cgroup.on("click", () => d3.select("#" + l.target.url).dispatch('click'));
+        })
+    }
+
+    if (siblings.length > 0){//node has siblings
+        console.log(siblings);
+    }
+}
+
+//calculate the position of node B preserving relative positioning
+//assuming that node A is the center of the chart and B is centered on an edge
+function calculateOverlayPosition(a, b){
+    var ax = a.x, ay = a.y, bx = b.x, by = b.y;
+    var diffx = bx - ax, diffy = by - ay;
+    var scalingRatio = width/2 / Math.abs(diffx);
+    if (scalingRatio * Math.abs(diffy) > height/2) {
+        scalingRatio = height/2 / Math.abs(diffy);
+    }
+    return [width/2 + scalingRatio * diffx, height/2 + scalingRatio * diffy];
 }
 
 //allow zooming to specific nodes with # in the URL
