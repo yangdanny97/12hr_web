@@ -19,11 +19,12 @@ function release() {
 function getBlobPath(options) {
     var points = [];
     var slice = (Math.PI * 2) / options.numPoints;
-    var startAngle = Math.random() * Math.PI * 2;
+    var startAngle = 0;
 
     for (var i = 0; i < options.numPoints; i++) {
         var angle = startAngle + i * slice;
-        var radius = options.minRadius + Math.random() * (options.maxRadius - options.minRadius)
+        var minradius = Math.sqrt(Math.pow(options.xradius,2) * Math.pow(Math.cos(angle),2) + Math.pow(options.yradius,2) * Math.pow(Math.sin(angle),2));
+        var radius = minradius * 0.8 + Math.random() * (minradius* 0.1);
         var point = {
             x: options.centerX + Math.cos(angle) * radius,
             y: options.centerY + Math.sin(angle) * radius
@@ -292,11 +293,11 @@ var node = zoomable_layer.append("g")
 var blobs = node.append("path")
     .attr("fill", (d) => d.brush)
     .attr("d", (d) => getBlobPath({
-        numPoints: 10,
+        numPoints: 12,
         centerX: 0,
         centerY: 0,
-        minRadius: widthScale(d.depth) * 0.75,
-        maxRadius: widthScale(d.depth) * 1,
+        xradius: widthScale(d.depth),
+        yradius: widthScale(d.depth),
     }))
     .attr("stroke", (d) => d.brush)
     .attr("class", "pulse");
@@ -337,45 +338,60 @@ node.attr("transform", function (d) {
 node.on('click', nodeClick);
 background.on("click", backgroundClick);
 
-function nodeClick(d) {
-    if (acquire()) {
-        if (typeof overlay != "undefined"){
+function removeOverlay(){
+    // if (typeof overlay != "undefined") {
+    //     overlay.remove();
+    //     overlay = undefined;
+    // }
+    if (typeof overlay != "undefined"){
+        overlay.transition().duration(1000).style("opacity",0);
+        setTimeout(() => {
             overlay.remove();
-        }
+            overlay = undefined;
+        }, 1000);
+        return 1000;
+    }
+    return 0;
+}
+
+function nodeClick(d) {
+    console.log("a");
+    if (acquire()) {
+        var time = removeOverlay();
+        console.log(time);
         d3.selectAll(".nodes").classed("hidden", false);
         d3.event.stopPropagation();
         var x = d.x,
             y = d.y,
             k = maxNodeSize / widthScale(d.depth) * 2;
-        if (d.depth == 0) {
-            k = 1;
-        }
-        else { //deeper nodes get clicked cause graph to fade out and create overlay
-            d3.selectAll(".nodes").classed("hidden", true);
-            setTimeout(() => createOverlay(d), 500);
-        }
-        currentDepth = d.depth;
-
-        labels.transition()
+        setTimeout(() => {
+            if (d.depth == 0) {
+                k = 1;
+            }
+            else { //deeper nodes get clicked cause graph to fade out and create overlay
+                d3.selectAll(".nodes").classed("hidden", true);
+                setTimeout(() => createOverlay(d), time + 100);
+            }
+            currentDepth = d.depth;
+            labels.transition()
             .duration(500).style("opacity", (d) => Math.abs(d.depth - currentDepth) > 1.5 ? 0 : 0.8);
 
-        zoomable_layer.transition()
-            .duration(1000)
-            .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
+            zoomable_layer.transition()
+                .duration(1000)
+                .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
 
-        background.transition()
-            .duration(1000)
-            .attr("fill", d.brush);
-        
-        setTimeout(release, 2000);
+            background.transition()
+                .duration(1000)
+                .attr("fill", d.brush);
+        }, time)
+        setTimeout(release, time + 1000);
     }
 }
 
 function backgroundClick() {
+    console.log("b");
     if (acquire()) {
-        if (typeof overlay != "undefined"){
-            overlay.remove();
-        }
+        var time = removeOverlay();
         var x = width / 2,
             y = height / 2,
             k = 0.5;
@@ -389,12 +405,11 @@ function backgroundClick() {
         background.transition()
             .duration(1000)
             .attr("fill", "white");
-        setTimeout(release, 1000);
+        setTimeout(release, time + 1000);
     }
 }
 
 function createOverlay(node){
-    //console.log(links);
     //Links: source is always the parent, target is always the child
     var parentLinks = links.filter((l) => l.target.id == node.id);
     var childrenLinks = links.filter((l) => l.source.id == node.id);
@@ -421,6 +436,39 @@ function createOverlay(node){
     .duration(1000)
     .style("opacity", 0.5);
 
+    //draw node
+    if (node.depth <= 1){
+        var ngroup = overlay.append("g");
+        var nnode = ngroup.append("path")
+        .attr("fill", node.brush)
+        .attr("d", getBlobPath({
+            numPoints: 15,
+            centerX: width/2,
+            centerY: height/2,
+            xradius: height * 0.25,
+            yradius: height * 0.25,
+        })).style("opacity", 0);
+        var nlabel = ngroup.append("text")
+        .text(node.id)
+        .attr('text-anchor', "middle")
+        .attr('x', width/2)
+        .attr('y', height/2)
+        .attr("font-size", "48px")
+        .attr("fill", node.hasOwnProperty("txtcolor") ? node.txtcolor : "black")
+        .style("opacity", 0);
+        nnode.transition().duration(1000).style("opacity", 0.8);
+        nlabel.transition().duration(1000).style("opacity", 0.8);
+        ngroup.on("click", () => d3.event.stopPropagation());
+    } else {
+        var drawing = overlay.append("rect")
+        .attr("x", width*0.2).attr("y", height*0.2)
+        .attr("width", width*0.6).attr("height", height*0.6)
+        .attr("fill", "silver")
+        .style("opacity", 0);
+        drawing.transition().duration(1000).style("opacity", 0.75);
+        drawing.on("click", () => d3.event.stopPropagation());
+    }
+
     if (parentLinks.length > 0){ //node has parent
         var parentLink = parentLinks[0];
         var ppos = calculateOverlayPosition(parentLink.target, parentLink.source);
@@ -428,11 +476,11 @@ function createOverlay(node){
         var pnode = pgroup.append("path")
         .attr("fill", parentLink.source.brush)
         .attr("d", getBlobPath({
-            numPoints: 10,
+            numPoints: 15,
             centerX: ppos[0],
             centerY: ppos[1],
-            minRadius: width/7,
-            maxRadius: width/7 * 1.2,
+            xradius: height * 0.3,
+            yradius: height * 0.2
         }))
         .attr("stroke", parentLink.source.brush)
         .attr("class", "pulse")
@@ -449,9 +497,7 @@ function createOverlay(node){
 
         pnode.transition().duration(1000).style("opacity", 1);
         plabel.transition().duration(1000).style("opacity", 1);
-        pgroup.on("click", () => {
-            d3.select("#" + parentLink.source.url).dispatch('click')
-        });
+        pgroup.on("click", () => d3.select("#" + parentLink.source.url).dispatch('click'));
     }
 
     if (childrenLinks.length > 0){ //node has children
@@ -462,11 +508,11 @@ function createOverlay(node){
             var cnode = cgroup.append("path")
             .attr("fill", l.target.brush)
             .attr("d", getBlobPath({
-                numPoints: 10,
+                numPoints: 15,
                 centerX: cpos[0],
                 centerY: cpos[1],
-                minRadius: width/7 * 0.75,
-                maxRadius: width/7,
+                xradius: height * 0.3,
+                yradius: height * 0.2
             }))
             .attr("stroke", l.target.brush)
             .attr("class", "pulse")
@@ -490,6 +536,8 @@ function createOverlay(node){
     if (siblings.length > 0){//node has siblings
         console.log(siblings);
     }
+
+    overlay.on("click", () => overlay.transition().duration(1000).style("opacity", 0));
 }
 
 //calculate the position of node B preserving relative positioning
