@@ -1,33 +1,60 @@
 <html>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <style>
-    body {
-        font-family: 'Arial Narrow';
+    :root {
+        --animation-time: 3s;
     }
-    
+
     @keyframes pulse {
         0% {
             stroke-width: 1px;
         }
+
         50% {
             stroke-width: 8px;
         }
+
         100% {
             stroke-width: 1px;
         }
     }
+
     .pulse {
-        animation: pulse 3s linear infinite;
+        animation: pulse var(--animation-time) linear infinite;
     }
 
     .hidden {
         opacity: 0;
         transition: opacity 0.5s;
     }
+
+    .topbtn {
+        padding: 25px;
+        height: 10%;
+    }
+
+    #top {
+        height: 10%;
+    }
 </style>
 
 <body>
+    <div id="top" class="row">
+        <div id="skip" class="topbtn col-sm-2 offset-sm-10">ABOUT</div>
+    </div>
+    <svg id="vis">
+        <defs>
+            <marker id="arrow" markerUnits="strokeWidth" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="6"
+                refY="6" orient="auto">
+                <path d="M2,2 L10,6 L2,10 L2,2" style="fill: gray;"></path>
+            </marker>
+        </defs>
+    </svg>
+
 </body>
-<script src = "vis-script.js"></script>
+<script src="vis-script.js"></script>
+
 </html>

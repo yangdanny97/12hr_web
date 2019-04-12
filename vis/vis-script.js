@@ -65,162 +65,119 @@ function cardinal(data, closed, tension) {
 
 let nodes = [{
         "key": "",
-        "id": "Mind Map",
-        "url": "Mind_Map",
-        "brush": "silver",
+        "id": "Wisdom",
+        "url": "Wisdom",
+        "brush": "whitesmoke",
+        "background":"white",
         "txtcolor": "black",
     },
     {
         "key": 1,
         "parent": 0,
         "id": "Heart",
-        "url": "Getting_more_time",
-        "brush": "blue",
+        "url": "Heart",
+        "brush": "#FF9A3A",
+        "background":"#FFE9DE",
         "txtcolor": "white",
     },
     {
         "key": 11,
         "parent": 1,
-        "id": "Wake up early",
-        "url": "Wake_up_early",
-        "brush": "blue",
-        "txtcolor": "white",
+        "id": "Romance",
+        "url": "Romance",
+        "brush": "#FFFC33",
+        "background":"#FFE9DE",
+        "txtcolor": "black",
     },
     {
         "key": 12,
         "parent": 1,
-        "id": "Delegate",
-        "url": "Delegate",
-        "brush": "blue",
-        "txtcolor": "white",
+        "id": "Family",
+        "url": "Family",
+        "brush": "#FF7141",
+        "background":"#FFE9DE",
+        "txtcolor": "black",
     },
     {
         "key": 13,
         "parent": 1,
-        "id": "Simplify",
-        "url": "Simplify",
-        "brush": "blue",
-        "txtcolor": "white",
+        "id": "Friends",
+        "url": "Friends",
+        "brush": "#FFD33C",
+        "background":"#FFE9DE",
+        "txtcolor": "black",
     },
     {
         "key": 2,
         "parent": 0,
         "id": "Mind",
-        "url": "More_effective_use",
-        "brush": "indigo",
+        "url": "Mind",
+        "brush": "#150E7E",
+        "background":"#E4FAFF",
         "txtcolor": "white",
     },
     {
         "key": 21,
         "parent": 2,
-        "id": "Planning",
-        "url": "Planning",
-        "brush": "indigo",
-        "txtcolor": "white",
-    },
-    {
-        "key": 211,
-        "parent": 21,
-        "id": "Priorities",
-        "url": "Priorities",
-        "brush": "indigo",
-        "txtcolor": "white",
-    },
-    {
-        "key": 212,
-        "parent": 21,
-        "id": "Ways to focus",
-        "url": "Ways_to_focus",
-        "brush": "indigo",
-        "txtcolor": "white",
+        "id": "Learning",
+        "url": "Learning",
+        "brush": "#7E9AFF",
+        "background":"#E4FAFF",
+        "txtcolor": "black",
     },
     {
         "key": 22,
         "parent": 2,
-        "id": "Goals",
-        "url": "Goals",
-        "brush": "indigo",
-        "txtcolor": "white",
+        "id": "Bias",
+        "url": "Bias",
+        "brush": "#8CE3F3",
+        "background":"#E4FAFF",
+        "txtcolor": "black",
+    },
+    {
+        "key": 23,
+        "parent": 2,
+        "id": "Thinking",
+        "url": "Thinking",
+        "brush": "#FFFC33",
+        "background":"#E4FAFF",
+        "txtcolor": "black",
     },
     {
         "key": 3,
         "parent": 0,
         "id": "Soul",
-        "url": "Time_wasting",
-        "brush": "deeppink",
+        "url": "Soul",
+        "brush": "#59B371",
+        "background":"#DFFFDC",
         "txtcolor": "white",
     },
     {
         "key": 31,
         "parent": 3,
-        "id": "Too many meetings",
-        "url": "Too_many_meetings",
-        "brush": "deeppink",
-        "txtcolor": "white",
+        "id": "Purpose",
+        "url": "Purpose",
+        "brush": "#FFFC33",
+        "background":"#DFFFDC",
+        "txtcolor": "black",
     },
     {
         "key": 32,
         "parent": 3,
-        "id": "Too much time spent on details",
-        "url": "Too_much_time_spent_on_details",
-        "brush": "deeppink",
-        "txtcolor": "white",
+        "id": "Wellbeing",
+        "url": "Wellbeing",
+        "brush": "#5BDD5B",
+        "background":"#DFFFDC",
+        "txtcolor": "black",
     },
     {
         "key": 33,
         "parent": 3,
-        "id": "Message fatigue",
-        "url": "Message_fatigue",
-        "brush": "deeppink",
-        "txtcolor": "white",
-    },
-    {
-        "key": 331,
-        "parent": 31,
-        "id": "Check messages less",
-        "url": "Check_messages_less",
-        "brush": "deeppink",
-        "txtcolor": "white",
-    },
-    {
-        "key": 332,
-        "parent": 31,
-        "id": "Message filters",
-        "url": "Message_filters",
-        "brush": "deeppink",
-        "txtcolor": "white",
-    },
-    {
-        "key": 341,
-        "parent": 32,
-        "id": "AAA",
-        "url": "AAA",
-        "brush": "deeppink",
-        "txtcolor": "white",
-    },
-    {
-        "key": 350,
-        "parent": 33,
-        "id": "BBB",
-        "url": "BBB",
-        "brush": "deeppink",
-        "txtcolor": "white",
-    },
-    {
-        "key": 351,
-        "parent": 33,
-        "id": "CCC",
-        "url": "CCC",
-        "brush": "deeppink",
-        "txtcolor": "white",
-    },
-    {
-        "key": 352,
-        "parent": 33,
-        "id": "DDD",
-        "url": "DDD",
-        "brush": "deeppink",
-        "txtcolor": "white",
+        "id": "Lorem",
+        "url": "Lorem",
+        "brush": "#B3DC4E",
+        "background":"#DFFFDC",
+        "txtcolor": "black",
     },
 ];
 
@@ -238,8 +195,8 @@ nodes.forEach(function (d) {
 });
 
 var width = window.innerWidth,
-    height = window.innerHeight;
-var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+    height = window.innerHeight * 0.9;
+var svg = d3.select("#vis").attr("width", width).attr("height", height);
 var background = svg.append("rect")
     .attr("id", "back")
     .attr("width", width)
@@ -250,18 +207,18 @@ var background = svg.append("rect")
 var zoomable_layer = svg.append("g");
 var offsetX, offsetY, zoomLevel;
 
-var maxNodeSize = 120;
+var maxNodeSize = 180;
 
-var widthScale = d3.scaleLinear().domain([0, 5]).range([maxNodeSize, maxNodeSize / 5]);
+var widthScale = d3.scaleLinear().domain([0, 3]).range([maxNodeSize, maxNodeSize / 4]);
 
 var selected; 
 //define forces
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id((d) => d.id)
         .strength(1)
-        .distance((d) => 30)
+        .distance(0)
     )
-    .force("charge", d3.forceManyBody().strength(-6000))
+    .force("charge", d3.forceManyBody().strength(-10000))
     .force("centerX", d3.forceX(width / 2)
         .strength((d) => (d.hasOwnProperty('parent')) ? 0.1 : 1)
     )
@@ -269,7 +226,7 @@ var simulation = d3.forceSimulation()
         .strength((d) => (d.hasOwnProperty('parent')) ? 0.1 : 1)
     )
     .force("collide", d3.forceCollide()
-        .radius((d) => 5 + widthScale(d.depth))
+        .radius((d) => widthScale(d.depth))
     )
     .stop();
 
@@ -306,8 +263,9 @@ var labels = node.append("text")
     .attr('text-anchor', "middle")
     .attr('x', 0)
     .attr('y', 0)
+    .attr("font-size", "25px")
     .attr("fill", (d) => d.hasOwnProperty("txtcolor") ? d.txtcolor : "black")
-    .style("opacity", (d) => Math.abs(d.depth - currentDepth) > 1.5 ? 0 : 0.8);
+    .style("opacity", (d) => Math.abs(d.depth - currentDepth) > 2.5 ? 0 : 0.8);
 
 //set up simlation
 simulation.nodes(nodes);
@@ -354,7 +312,7 @@ function nodeClick(d) {
             d3.event.stopPropagation();
             var x = d.x,
                 y = d.y,
-                k = maxNodeSize / widthScale(d.depth) * 2, 
+                k = maxNodeSize / widthScale(d.depth) * 1.5, 
                 currentDepth = d.depth;
             if (d.depth == 0) {
                 k = 1;
@@ -387,7 +345,7 @@ function backgroundClick() {
         d3.selectAll(".nodes").classed("hidden", false);
         currentDepth = 0;
         labels.transition()
-            .duration(500).style("opacity", (d) => Math.abs(d.depth - currentDepth) > 1.5 ? 0 : 0.8);
+            .duration(500).style("opacity", (d) => Math.abs(d.depth - currentDepth) > 2.5 ? 0 : 0.8);
         zoomable_layer.transition()
             .duration(1000)
             .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x) * (k - 1) + "," + (-y) * (k - 1) + ")");
@@ -408,7 +366,7 @@ function createOverlay(d, k){
     var siblings = nodes.filter((n) => n.id != d.id && d.hasOwnProperty("parent") && n.parent == d.parent);
     if (parentLinks.length > 0){ //node has parent
         var parentLink = parentLinks[0];
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k);
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, (d.depth == 1) ? 1.1 : 1.25);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
@@ -424,7 +382,7 @@ function createOverlay(d, k){
 
     if (childrenLinks.length > 0){ //node has children
         childrenLinks.forEach((l) => {
-            var pos = calculateOverlayPosition(l.source, l.target, k);
+            var pos = calculateOverlayPosition(l.source, l.target, k, 1);
             var childNode = d3.select("#" + l.target.url);
             childNode.classed("hidden", false);
             childNode.transition().duration(1000)
@@ -438,25 +396,24 @@ function createOverlay(d, k){
         });
     }
 
-    if (siblings.length > 0){//node has siblings
+    if (siblings.length > 0 && node.depth > 1){//node has siblings
         siblings.forEach((s) => {
-            var pos = calculateOverlayPosition(d, s, k);
             var siblingNode = d3.select("#" + s.url);
             setTimeout(() => {
-                var labelpos = calculateOverlayPositionAbsolute(d, s, 0.85);
-                var symbolGenerator =  d3.symbol().type(d3["symbolTriangle"]).size(2500);
-                var angle = Math.atan2((s.y - d.y),(s.x - d.x)) * 180 / Math.PI;
-                var overlay = svg.append('path')
-                    .attr("d", symbolGenerator())
-                    .attr("fill", "gray")
-                    .attr("class", "overlay")
-                    .attr("transform", "translate(" + labelpos[0] + "," + labelpos[1] + ")"
-                    + " rotate(" + (angle + 90) + ")")
+                var labelpos = calculateOverlayPositionAbsolute(d, s, 0.8);
+                var labelpos_ = calculateOverlayPositionAbsolute(d, s, 0.9);
+                var overlay = svg.append("line")
+                    .attr("x1",labelpos[0])  
+                    .attr("y1",labelpos[1])  
+                    .attr("x2",labelpos_[0])  
+                    .attr("y2",labelpos_[1]) 
+                    .attr("class", "overlay") 
+                    .attr("stroke","gray")  
+                    .attr("stroke-width", 8)  
+                    .attr("marker-end","url(#arrow)")
                     .on("click", () => siblingNode.dispatch('click'));
                 overlay.transition().duration(500)
                 .style("opacity", 1);
-                var overlabel = drawOverlabel(s, labelpos);
-                overlabel.on("click", () => siblingNode.dispatch('click'));
             }, 500);
         });
     }
@@ -479,15 +436,16 @@ function drawOverlabel(node, position){
 
 //calculate the position of node B preserving relative positioning
 //assuming that node A is the center of the chart and B is centered on an edge
-function calculateOverlayPosition(a, b, k){
+function calculateOverlayPosition(a, b, k, m){
     var ax = a.x, ay = a.y, bx = b.x, by = b.y;
     var diffx = bx - ax, diffy = by - ay;
     var scalingRatio = width/2/k / Math.abs(diffx);
     if (scalingRatio * Math.abs(diffy) > height/2/k) {
         scalingRatio = height/2/k / Math.abs(diffy);
     }
+    scalingRatio = scalingRatio * m;
     var posx = (scalingRatio * diffx) - diffx,
-    posy = (scalingRatio * diffy) * 1.2 - diffy; //force larger offset in y direction to reduce overlap
+    posy = (scalingRatio * diffy) * 1.25 - diffy; //force larger offset in y direction to reduce overlap
     return [posx, posy];
 }
 
@@ -509,4 +467,6 @@ let url = window.location.href;
 if (url.lastIndexOf("#") >= 0) {
     let element_id = url.substring(url.lastIndexOf('#'));
     d3.select(element_id).dispatch('click');
+} else {
+    backgroundClick();
 }
