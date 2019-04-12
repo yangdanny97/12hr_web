@@ -256,6 +256,7 @@ var blobs = node.append("path")
         yradius: widthScale(d.depth),
     }))
     .attr("stroke", (d) => d.brush)
+    .style("--animation-time", (d) => (Math.random() * 2 + 1)+"s")
     .attr("class", "pulse");
 
 var labels = node.append("text")
