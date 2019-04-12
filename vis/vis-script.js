@@ -317,6 +317,8 @@ function nodeClick(d) {
             if (d.depth == 0) {
                 k = 1;
             }
+            //TODO - some labels disappearing when not supposed to
+            //Back navigation: When you click on Mind Map, then Soul and back to Mind Map, the text of “Mind Map” disappears
             else { //deeper nodes get clicked cause graph to fade out and create overlay
                 setTimeout(() => createOverlay(d, k, x, y), 1000);
                 labels.transition()
