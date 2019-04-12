@@ -366,7 +366,9 @@ function createOverlay(d, k){
     var siblings = nodes.filter((n) => n.id != d.id && d.hasOwnProperty("parent") && n.parent == d.parent);
     if (parentLinks.length > 0){ //node has parent
         var parentLink = parentLinks[0];
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, (d.depth == 1) ? 1.1 : 1.25);
+
+        //TODO - adjust this number according to parent node size;
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, (d.depth == 1) ? 1.1 : 1.2);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
