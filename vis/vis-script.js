@@ -179,6 +179,24 @@ let nodes = [{
         "background":"#DFFFDC",
         "txtcolor": "black",
     },
+    {
+        "key": 331,
+        "parent": 33,
+        "id": "Ipsum",
+        "url": "Ipsum",
+        "brush": "#B3DC4E",
+        "background":"#DFFFDC",
+        "txtcolor": "black",
+    },
+    {
+        "key": 332,
+        "parent": 33,
+        "id": "Dolor",
+        "url": "Dolor",
+        "brush": "#B3DC4E",
+        "background":"#DFFFDC",
+        "txtcolor": "black",
+    },
 ];
 
 //some preprocessing
@@ -221,7 +239,7 @@ var simulation = d3.forceSimulation()
         .strength(1)
         .distance(0)
     )
-    .force("charge", d3.forceManyBody().strength(-10000))
+    .force("charge", d3.forceManyBody().strength(-8000))
     .force("centerX", d3.forceX(width / 2)
         .strength((d) => (d.hasOwnProperty('parent')) ? 0.1 : 1)
     )
@@ -390,7 +408,7 @@ function createOverlay(d, k){
         var parentLink = parentLinks[0];
 
         //TODO - adjust this number according to parent node size;
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, (d.depth == 1) ? 1.1 : 1.2);
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1 + 0.2*parentLink.source.depth);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
