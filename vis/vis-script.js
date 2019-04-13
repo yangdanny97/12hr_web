@@ -197,14 +197,17 @@ nodes.forEach(function (d) {
 var width = window.innerWidth,
     height = window.innerHeight * 0.9;
 var svg = d3.select("#vis").attr("width", width).attr("height", height);
+
 var background = svg.append("rect")
     .attr("id", "back")
     .attr("width", width)
     .attr("height", height)
     .attr("stroke", "black")
     .style("opacity", 0.5)
-    .attr("fill", "white");
+    .attr("fill", "none");
+
 var zoomable_layer = svg.append("g");
+var backgroundg = zoomable_layer.append("g");
 var offsetX, offsetY, zoomLevel;
 
 var maxNodeSize = 180;
@@ -256,7 +259,7 @@ var blobs = node.append("path")
         yradius: widthScale(d.depth),
     }))
     .attr("stroke", (d) => d.brush)
-    .style("--animation-time", (d) => (Math.random() * 2 + 1)+"s")
+    .style("--animation-time", (d) => (2*Math.random() + 2)+"s")
     .attr("class", "pulse");
 
 var labels = node.append("text")
@@ -296,6 +299,19 @@ node.attr("transform", function (d) {
 node.on('click', nodeClick);
 background.on("click", backgroundClick);
 
+//voronoi_background
+var voronoi_nodes = nodes.filter((n) => n.key === 1 || n.key === 2 || n.key === 3);
+var voronoi = d3.voronoi().extent([[-2*width, -2*height], [2*width, 2*height]]);
+var vertices = voronoi_nodes.map((n) => [n.x, n.y]);
+var voronoi_paths = backgroundg.selectAll("path")
+.data(voronoi.polygons(vertices))
+.enter().append("path")
+.attr("class", "voronoi")
+.attr("fill", (d, i) => voronoi_nodes[i].background)
+.attr("d", (d) => "M" + d.join("L") + "Z");
+
+voronoi_paths.on("click", backgroundClick);
+
 function removeOverlay(){
     node.classed("hidden", false);
     labels.classed("hidden", false);
@@ -309,6 +325,8 @@ function removeOverlay(){
 function nodeClick(d) {
     if (selected != d.url){
         if (acquire()) {
+            d3.selectAll(".voronoi").transition().duration(500)
+            .style("opacity", 0);
             removeOverlay();
             d3.event.stopPropagation();
             var x = d.x,
@@ -332,8 +350,8 @@ function nodeClick(d) {
     
             background.transition()
                 .duration(1000)
-                .attr("fill", d.brush);
-            setTimeout(release, 2500);
+                .attr("fill", d.brush); //TODO can switch to d.background
+            setTimeout(release, 2000);
             selected = d.url;
         }
     }
@@ -341,6 +359,7 @@ function nodeClick(d) {
 
 function backgroundClick() {
     if (acquire()) {
+        d3.selectAll(".voronoi").style("opacity", 1);
         removeOverlay();
         var x = width / 2,
             y = height / 2,
@@ -354,7 +373,7 @@ function backgroundClick() {
             .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x) * (k - 1) + "," + (-y) * (k - 1) + ")");
         background.transition()
             .duration(1000)
-            .attr("fill", "white");
+            .attr("fill", "none");
         setTimeout(release, 1000);
         selected = "";
     }
