@@ -197,6 +197,15 @@ let nodes = [{
         "background":"#DFFFDC",
         "txtcolor": "black",
     },
+    {
+        "key": 333,
+        "parent": 33,
+        "id": "AEIOU",
+        "url": "AEIOU",
+        "brush": "#B3DC4E",
+        "background":"#DFFFDC",
+        "txtcolor": "black",
+    },
 ];
 
 //some preprocessing
@@ -354,8 +363,6 @@ function nodeClick(d) {
             if (d.depth == 0) {
                 k = 1;
             }
-            //TODO - some labels disappearing when not supposed to
-            //Back navigation: When you click on Mind Map, then Soul and back to Mind Map, the text of “Mind Map” disappears
             else { //deeper nodes get clicked cause graph to fade out and create overlay
                 setTimeout(() => createOverlay(d, k, x, y), 1000);
                 labels.transition()
@@ -404,11 +411,10 @@ function createOverlay(d, k){
     var parentLinks = links.filter((l) => l.target.id == d.id);
     var childrenLinks = links.filter((l) => l.source.id == d.id);
     var siblings = nodes.filter((n) => n.id != d.id && d.hasOwnProperty("parent") && n.parent == d.parent);
+    console.log(siblings);
     if (parentLinks.length > 0){ //node has parent
         var parentLink = parentLinks[0];
-
-        //TODO - adjust this number according to parent node size;
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1 + 0.2*parentLink.source.depth);
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1 + 0.3*parentLink.source.depth);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
@@ -424,7 +430,7 @@ function createOverlay(d, k){
 
     if (childrenLinks.length > 0){ //node has children
         childrenLinks.forEach((l) => {
-            var pos = calculateOverlayPosition(l.source, l.target, k, 1);
+            var pos = calculateOverlayPosition(l.source, l.target, k, 0.95);
             var childNode = d3.select("#" + l.target.url);
             childNode.classed("hidden", false);
             childNode.transition().duration(1000)
@@ -438,6 +444,7 @@ function createOverlay(d, k){
         });
     }
 
+    //TODO handle siblings
     if (siblings.length > 0 && node.depth > 1){//node has siblings
         siblings.forEach((s) => {
             var siblingNode = d3.select("#" + s.url);
