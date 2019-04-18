@@ -466,7 +466,9 @@ function drawCarouselImage(pos){
 
 function removeCarousel(){
     d3.selectAll(".carousel").remove();
-    d3.select("#"+currentNode.url).classed("hidden", false);
+    if (currentNode != undefined){
+        d3.select("#"+currentNode.url).classed("hidden", false);
+    }
 }
 
 function positionZoomedNodes(d, k){
