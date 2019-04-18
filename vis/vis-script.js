@@ -346,6 +346,7 @@ function nodeClick(d) {
             d3.selectAll(".voronoi").transition().duration(500)
             .style("opacity", d.depth == 0 ? 1 : 0);
             removeOverlay();
+            removeCarousel();
             d3.event.stopPropagation();
             var x = d.x,
                 y = d.y,
@@ -359,6 +360,9 @@ function nodeClick(d) {
                 setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
                 labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
+                if (d.depth == 2) {
+                    setTimeout(() => drawCarousel(d,0), 1500);
+                }
             }
     
             //matrix zoom
@@ -382,6 +386,7 @@ function backgroundClick() {
     if (acquire()) {
         d3.selectAll(".voronoi").style("opacity", 1);
         removeOverlay();
+        removeCarousel();
         var x = width / 2,
             y = height / 2,
             k = 0.6;
@@ -398,6 +403,70 @@ function backgroundClick() {
         setTimeout(release, 1000);
         selected = "";
     }
+}
+
+var currentCarousel;
+var carouselPos;
+var currentImage;
+var currentNode;
+
+function drawCarousel(node){
+    currentCarousel = node.carousel;
+    carouselPos = 0;
+    currentNode = node;
+    d3.select("#" + node.url).classed("hidden", true);
+    drawCarouselImage(carouselPos);
+    drawText("X",width * 0.9, height * 0.15,removeCarousel);
+    drawText("<", width * 0.1, height * 0.5, decCarousel);
+    drawText(">", width * 0.9, height * 0.5, incCarousel);
+    drawText(node.id, width * 0.1, height * 0.15);
+}
+
+function drawText(text, x, y, callback){
+    var t = d3.select("body").append("h3")
+    .style("background", "white")
+    .style("padding", "5px")
+    .attr("class","carousel")
+    .style("position", "absolute")
+    .style("left", x+"px")
+    .style("top", y+"px")
+    .html(text);
+    if (callback !== undefined) {
+        t.on("click", callback);
+    }
+}
+
+function incCarousel(){
+    carouselPos = (carouselPos + 1) % currentCarousel.length;
+    currentImage.remove();
+    drawCarouselImage(carouselPos);
+}
+
+function decCarousel(){
+    if (carouselPos == 0) {
+        carouselPos = currentCarousel.length - 1;
+    }  else {
+        carouselPos = carouselPos - 1;
+    }
+    currentImage.remove();
+    drawCarouselImage(carouselPos);
+}
+
+function drawCarouselImage(pos){
+    currentImage = svg.append("image")
+    .attr("x", 0.05 * width)
+    .attr("y", 0.1 * height)
+    .attr("width", 0.9 * width)
+    .attr("height", 0.8 * height)
+    .attr("xlink:href",currentCarousel[carouselPos])
+    .style("opacity", 0)
+    .attr("class", "overlay carousel");
+    currentImage.transition().duration(500).style("opacity", 1);
+}
+
+function removeCarousel(){
+    d3.selectAll(".carousel").remove();
+    d3.select("#"+currentNode.url).classed("hidden", false);
 }
 
 function positionZoomedNodes(d, k){
