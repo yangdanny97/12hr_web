@@ -24,7 +24,7 @@ function getBlobPath(options) {
     for (var i = 0; i < options.numPoints; i++) {
         var angle = startAngle + i * slice;
         var minradius = Math.sqrt(Math.pow(options.xradius,2) * Math.pow(Math.cos(angle),2) + Math.pow(options.yradius,2) * Math.pow(Math.sin(angle),2));
-        var radius = minradius * 0.8 + Math.random() * (minradius* 0.1);
+        var radius = minradius * 0.9 + Math.random() * (minradius* 0.1);
         var point = {
             x: options.centerX + Math.cos(angle) * radius,
             y: options.centerY + Math.sin(angle) * radius
@@ -67,7 +67,7 @@ let nodes = [{
         "key": "",
         "id": "Wisdom",
         "url": "Wisdom",
-        "brush": "whitesmoke",
+        "brush": "white",
         "background":"white",
         "txtcolor": "black",
     },
@@ -88,6 +88,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background":"#FFE9DE",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 12,
@@ -97,6 +98,7 @@ let nodes = [{
         "brush": "#FF7141",
         "background":"#FFE9DE",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 13,
@@ -106,6 +108,7 @@ let nodes = [{
         "brush": "#FFD33C",
         "background":"#FFE9DE",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 2,
@@ -124,6 +127,7 @@ let nodes = [{
         "brush": "#7E9AFF",
         "background":"#E4FAFF",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 22,
@@ -133,6 +137,7 @@ let nodes = [{
         "brush": "#8CE3F3",
         "background":"#E4FAFF",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 23,
@@ -142,6 +147,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background":"#E4FAFF",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 3,
@@ -160,6 +166,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background":"#DFFFDC",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 32,
@@ -169,6 +176,7 @@ let nodes = [{
         "brush": "#5BDD5B",
         "background":"#DFFFDC",
         "txtcolor": "black",
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
     },
     {
         "key": 33,
@@ -178,34 +186,8 @@ let nodes = [{
         "brush": "#B3DC4E",
         "background":"#DFFFDC",
         "txtcolor": "black",
-    },
-    {
-        "key": 331,
-        "parent": 33,
-        "id": "Ipsum",
-        "url": "Ipsum",
-        "brush": "#B3DC4E",
-        "background":"#DFFFDC",
-        "txtcolor": "black",
-    },
-    {
-        "key": 332,
-        "parent": 33,
-        "id": "Dolor",
-        "url": "Dolor",
-        "brush": "#B3DC4E",
-        "background":"#DFFFDC",
-        "txtcolor": "black",
-    },
-    {
-        "key": 333,
-        "parent": 33,
-        "id": "AEIOU",
-        "url": "AEIOU",
-        "brush": "#B3DC4E",
-        "background":"#DFFFDC",
-        "txtcolor": "black",
-    },
+        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+    }
 ];
 
 //some preprocessing
@@ -230,7 +212,7 @@ var background = svg.append("rect")
     .attr("width", width)
     .attr("height", height)
     .attr("stroke", "black")
-    .style("opacity", 0.5)
+    .style("opacity", 0.4)
     .attr("fill", "none");
 
 var zoomable_layer = svg.append("g");
@@ -248,7 +230,7 @@ var simulation = d3.forceSimulation()
         .strength(1)
         .distance(0)
     )
-    .force("charge", d3.forceManyBody().strength(-8000))
+    .force("charge", d3.forceManyBody().strength(-10000))
     .force("centerX", d3.forceX(width / 2)
         .strength((d) => (d.hasOwnProperty('parent')) ? 0.1 : 1)
     )
@@ -297,6 +279,15 @@ var labels = node.append("text")
     .attr("font-size", "25px")
     .attr("fill", (d) => d.hasOwnProperty("txtcolor") ? d.txtcolor : "black")
     .style("opacity", (d) => Math.abs(d.depth - currentDepth) > 2.5 ? 0 : 0.8);
+
+//Test for SVG markers
+
+// var labels = node.append('image')
+// .attr('x', -50)
+// .attr('y', -50)
+// .attr('width',100)
+// .attr('height', 100)
+// .attr("xlink:href","supermarket.svg");
 
 //set up simlation
 simulation.nodes(nodes);
@@ -353,29 +344,34 @@ function nodeClick(d) {
     if (selected != d.url){
         if (acquire()) {
             d3.selectAll(".voronoi").transition().duration(500)
-            .style("opacity", 0);
+            .style("opacity", d.depth == 0 ? 1 : 0);
             removeOverlay();
             d3.event.stopPropagation();
             var x = d.x,
                 y = d.y,
                 k = maxNodeSize / widthScale(d.depth) * 1.5, 
                 currentDepth = d.depth;
+            
             if (d.depth == 0) {
                 k = 1;
             }
-            else { //deeper nodes get clicked cause graph to fade out and create overlay
-                setTimeout(() => createOverlay(d, k, x, y), 1000);
+            else { //deeper nodes get clicked cause graph to fade out and repositions nodes
+                setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
                 labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             }
     
+            //matrix zoom
             zoomable_layer.transition()
                 .duration(1000)
                 .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
     
-            background.transition()
+            if (d.depth != 0) {
+                background.transition()
                 .duration(1000)
                 .attr("fill", d.brush); //TODO can switch to d.background
+            }
+
             setTimeout(release, 2000);
             selected = d.url;
         }
@@ -388,7 +384,7 @@ function backgroundClick() {
         removeOverlay();
         var x = width / 2,
             y = height / 2,
-            k = 0.5;
+            k = 0.6;
         d3.selectAll(".nodes").classed("hidden", false);
         currentDepth = 0;
         labels.transition()
@@ -404,14 +400,14 @@ function backgroundClick() {
     }
 }
 
-function createOverlay(d, k){
+function positionZoomedNodes(d, k){
     node.classed("hidden", true);
     d3.select("#" + d.url).classed("hidden", false);
     //Links: source is always the parent, target is always the child
     var parentLinks = links.filter((l) => l.target.id == d.id);
     var childrenLinks = links.filter((l) => l.source.id == d.id);
     var siblings = nodes.filter((n) => n.id != d.id && d.hasOwnProperty("parent") && n.parent == d.parent);
-    console.log(siblings);
+
     if (parentLinks.length > 0){ //node has parent
         var parentLink = parentLinks[0];
         var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1 + 0.3*parentLink.source.depth);
@@ -423,9 +419,19 @@ function createOverlay(d, k){
         });
         setTimeout(() => {
             var labelpos = calculateOverlayPositionAbsolute(parentLink.target, parentLink.source, 0.9);
-            drawOverlabel(parentLink.source, labelpos);
+            drawOverlabel(parentLink.source, labelpos, 40);
         }, 500);
-        
+
+
+        // code for drawing labels in opposite side as parent
+
+        // if (d.depth == 2){
+        //     var oppositeParent = {"x": 2 * d.x - parentLink.source.x, "y":2 * d.y - parentLink.source.y, "id":d.id};
+        //     setTimeout(() => {
+        //         var labelpos = calculateOverlayPositionAbsolute(parentLink.target, oppositeParent, 0.9);
+        //         drawOverlabel(oppositeParent, labelpos, 40);
+        //     }, 500);  
+        // }
     }
 
     if (childrenLinks.length > 0){ //node has children
@@ -439,42 +445,42 @@ function createOverlay(d, k){
             });
             setTimeout(() => {
                 var labelpos = calculateOverlayPositionAbsolute(l.source,l.target, 0.9);
-                drawOverlabel(l.target, labelpos);
+                drawOverlabel(l.target, labelpos, 24);
             }, 500);
         });
     }
 
-    //TODO handle siblings
-    if (siblings.length > 0 && node.depth > 1){//node has siblings
-        siblings.forEach((s) => {
-            var siblingNode = d3.select("#" + s.url);
-            setTimeout(() => {
-                var labelpos = calculateOverlayPositionAbsolute(d, s, 0.8);
-                var labelpos_ = calculateOverlayPositionAbsolute(d, s, 0.9);
-                var overlay = svg.append("line")
-                    .attr("x1",labelpos[0])  
-                    .attr("y1",labelpos[1])  
-                    .attr("x2",labelpos_[0])  
-                    .attr("y2",labelpos_[1]) 
-                    .attr("class", "overlay") 
-                    .attr("stroke","gray")  
-                    .attr("stroke-width", 8)  
-                    .attr("marker-end","url(#arrow)")
-                    .on("click", () => siblingNode.dispatch('click'));
-                overlay.transition().duration(500)
-                .style("opacity", 1);
-            }, 500);
-        });
-    }
+    // //TODO handle siblings
+    // if (siblings.length > 0 && node.depth > 1){//node has siblings
+    //     siblings.forEach((s) => {
+    //         var siblingNode = d3.select("#" + s.url);
+    //         setTimeout(() => {
+    //             var labelpos = calculateOverlayPositionAbsolute(d, s, 0.8);
+    //             var labelpos_ = calculateOverlayPositionAbsolute(d, s, 0.9);
+    //             var overlay = svg.append("line")
+    //                 .attr("x1",labelpos[0])  
+    //                 .attr("y1",labelpos[1])  
+    //                 .attr("x2",labelpos_[0])  
+    //                 .attr("y2",labelpos_[1]) 
+    //                 .attr("class", "overlay") 
+    //                 .attr("stroke","gray")  
+    //                 .attr("stroke-width", 8)  
+    //                 .attr("marker-end","url(#arrow)")
+    //                 .on("click", () => siblingNode.dispatch('click'));
+    //             overlay.transition().duration(500)
+    //             .style("opacity", 1);
+    //         }, 500);
+    //     });
+    // }
 }
 
-function drawOverlabel(node, position){
+function drawOverlabel(node, position, txtsize){
     var overlabel = svg.append("text")
     .text(node.id)
     .attr('text-anchor', "middle")
     .attr('x', position[0])
     .attr('y', position[1])
-    .attr("font-size", 24)
+    .attr("font-size", txtsize)
     .attr("fill", node.hasOwnProperty("txtcolor") ? node.txtcolor : "black")
     .style("opacity", 0)
     .attr("class","overlay");
@@ -493,8 +499,8 @@ function calculateOverlayPosition(a, b, k, m){
         scalingRatio = height/2/k / Math.abs(diffy);
     }
     scalingRatio = scalingRatio * m;
-    var posx = (scalingRatio * diffx) - diffx,
-    posy = (scalingRatio * diffy) * 1.25 - diffy; //force larger offset in y direction to reduce overlap
+    var posx = (scalingRatio * diffx) * 0.95 - diffx,
+    posy = (scalingRatio * diffy) * 1.4 - diffy; //force larger offset in y direction to reduce overlap
     return [posx, posy];
 }
 
