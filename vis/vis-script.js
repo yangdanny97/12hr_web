@@ -23,8 +23,8 @@ function getBlobPath(options) {
 
     for (var i = 0; i < options.numPoints; i++) {
         var angle = startAngle + i * slice;
-        var minradius = Math.sqrt(Math.pow(options.xradius,2) * Math.pow(Math.cos(angle),2) + Math.pow(options.yradius,2) * Math.pow(Math.sin(angle),2));
-        var radius = minradius * 0.9 + Math.random() * (minradius* 0.1);
+        var minradius = Math.sqrt(Math.pow(options.xradius, 2) * Math.pow(Math.cos(angle), 2) + Math.pow(options.yradius, 2) * Math.pow(Math.sin(angle), 2));
+        var radius = minradius * 0.9 + Math.random() * (minradius * 0.1);
         var point = {
             x: options.centerX + Math.cos(angle) * radius,
             y: options.centerY + Math.sin(angle) * radius
@@ -68,7 +68,7 @@ let nodes = [{
         "id": "Wisdom",
         "url": "Wisdom",
         "brush": "white",
-        "background":"white",
+        "background": "white",
         "txtcolor": "black",
     },
     {
@@ -77,7 +77,7 @@ let nodes = [{
         "id": "Heart",
         "url": "Heart",
         "brush": "#FF9A3A",
-        "background":"#FFE9DE",
+        "background": "#FFE9DE",
         "txtcolor": "white",
     },
     {
@@ -86,9 +86,9 @@ let nodes = [{
         "id": "Romance",
         "url": "Romance",
         "brush": "#FFFC33",
-        "background":"#FFE9DE",
+        "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 12,
@@ -96,9 +96,9 @@ let nodes = [{
         "id": "Family",
         "url": "Family",
         "brush": "#FF7141",
-        "background":"#FFE9DE",
+        "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 13,
@@ -106,9 +106,9 @@ let nodes = [{
         "id": "Friends",
         "url": "Friends",
         "brush": "#FFD33C",
-        "background":"#FFE9DE",
+        "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 2,
@@ -116,7 +116,7 @@ let nodes = [{
         "id": "Mind",
         "url": "Mind",
         "brush": "#150E7E",
-        "background":"#E4FAFF",
+        "background": "#E4FAFF",
         "txtcolor": "white",
     },
     {
@@ -125,9 +125,9 @@ let nodes = [{
         "id": "Learning",
         "url": "Learning",
         "brush": "#7E9AFF",
-        "background":"#E4FAFF",
+        "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 22,
@@ -135,9 +135,9 @@ let nodes = [{
         "id": "Bias",
         "url": "Bias",
         "brush": "#8CE3F3",
-        "background":"#E4FAFF",
+        "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 23,
@@ -145,9 +145,9 @@ let nodes = [{
         "id": "Thinking",
         "url": "Thinking",
         "brush": "#FFFC33",
-        "background":"#E4FAFF",
+        "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 3,
@@ -155,7 +155,7 @@ let nodes = [{
         "id": "Soul",
         "url": "Soul",
         "brush": "#59B371",
-        "background":"#DFFFDC",
+        "background": "#DFFFDC",
         "txtcolor": "white",
     },
     {
@@ -164,9 +164,9 @@ let nodes = [{
         "id": "Purpose",
         "url": "Purpose",
         "brush": "#FFFC33",
-        "background":"#DFFFDC",
+        "background": "#DFFFDC",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 32,
@@ -174,9 +174,9 @@ let nodes = [{
         "id": "Wellbeing",
         "url": "Wellbeing",
         "brush": "#5BDD5B",
-        "background":"#DFFFDC",
+        "background": "#DFFFDC",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     },
     {
         "key": 33,
@@ -184,9 +184,9 @@ let nodes = [{
         "id": "Lorem",
         "url": "Lorem",
         "brush": "#B3DC4E",
-        "background":"#DFFFDC",
+        "background": "#DFFFDC",
         "txtcolor": "black",
-        "carousel":["supermarket.svg","supermarket.svg","supermarket.svg"]
+        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
     }
 ];
 
@@ -212,7 +212,7 @@ var background = svg.append("rect")
     .attr("width", width)
     .attr("height", height)
     .attr("stroke", "black")
-    .style("opacity", 0.4)
+    .style("opacity", 1)
     .attr("fill", "none");
 
 var zoomable_layer = svg.append("g");
@@ -223,7 +223,7 @@ var maxNodeSize = 180;
 
 var widthScale = d3.scaleLinear().domain([0, 3]).range([maxNodeSize, maxNodeSize / 4]);
 
-var selected; 
+var selected;
 //define forces
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id((d) => d.id)
@@ -268,7 +268,7 @@ var blobs = node.append("path")
         yradius: widthScale(d.depth),
     }))
     .attr("stroke", (d) => d.brush)
-    .style("--animation-time", (d) => (2*Math.random() + 2)+"s")
+    .style("--animation-time", (d) => (2 * Math.random() + 2) + "s")
     .attr("class", "pulse");
 
 var labels = node.append("text")
@@ -319,66 +319,80 @@ background.on("click", backgroundClick);
 
 //voronoi_background
 var voronoi_nodes = nodes.filter((n) => n.key === 1 || n.key === 2 || n.key === 3);
-var voronoi = d3.voronoi().extent([[-2*width, -2*height], [2*width, 2*height]]);
+var voronoi = d3.voronoi().extent([
+    [-2 * width, -2 * height],
+    [2 * width, 2 * height]
+]);
 var vertices = voronoi_nodes.map((n) => [n.x, n.y]);
 var voronoi_paths = backgroundg.selectAll("path")
-.data(voronoi.polygons(vertices))
-.enter().append("path")
-.attr("class", "voronoi")
-.attr("fill", (d, i) => voronoi_nodes[i].background)
-.attr("d", (d) => "M" + d.join("L") + "Z");
+    .data(voronoi.polygons(vertices))
+    .enter().append("path")
+    .attr("class", "voronoi")
+    .attr("fill", (d, i) => voronoi_nodes[i].background)
+    .attr("d", (d) => "M" + d.join("L") + "Z");
 
 voronoi_paths.on("click", backgroundClick);
 
-function removeOverlay(){
+function removeOverlay() {
     node.classed("hidden", false);
     labels.classed("hidden", false);
     d3.selectAll(".overlay").remove();
+    node.on("click", nodeClick);
     node.transition().duration(500)
-    .attr("transform", function (d) {
-        return "translate(" + d.x + "," + d.y + ")";
-    });
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
 }
 
 function nodeClick(d) {
-    if (selected != d.url){
-        if (acquire()) {
-            d3.selectAll(".voronoi").transition().duration(500)
+    if (acquire()) {
+        d3.event.stopPropagation();
+        var changeNode = d.depth != currentDepth;
+        var x = d.x,
+            y = d.y,
+            k = maxNodeSize / widthScale(d.depth) * 1.5;
+        currentDepth = d.depth;
+        
+        d3.selectAll(".voronoi").transition().duration(500)
             .style("opacity", d.depth == 0 ? 1 : 0);
+        
+        if (changeNode){
             removeOverlay();
             removeCarousel();
-            d3.event.stopPropagation();
-            var x = d.x,
-                y = d.y,
-                k = maxNodeSize / widthScale(d.depth) * 1.5, 
-                currentDepth = d.depth;
-            
-            if (d.depth == 0) {
-                k = 1;
-            }
-            else { //deeper nodes get clicked cause graph to fade out and repositions nodes
-                setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
-                labels.transition()
-                .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
-                if (d.depth == 2) {
-                    setTimeout(() => drawCarousel(d,0), 1500);
-                }
-            }
-    
-            //matrix zoom
-            zoomable_layer.transition()
-                .duration(1000)
-                .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
-    
-            if (d.depth != 0) {
-                background.transition()
-                .duration(1000)
-                .attr("fill", d.brush); //TODO can switch to d.background
-            }
-
-            setTimeout(release, 2000);
-            selected = d.url;
         }
+
+        if (d.depth == 0) {
+            k = 1;
+            labels.transition()
+                .duration(500).style("opacity", 1);
+        } else if (d.depth == 1) {
+            setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
+            labels.transition()
+                .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
+            //TODO test transparent gif
+            drawCarouselImage("static/bg-transparent.gif");
+        } else if (d.depth == 2 && changeNode){ //deeper nodes get clicked cause graph to fade out and repositions nodes
+            setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
+            labels.transition()
+                .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
+            setTimeout(() => drawCarousel(d,), 1500);
+        } else if (d.depth == 2) {
+            setTimeout(() => drawCarousel(d,), 500);
+        }
+
+        //matrix zoom
+        zoomable_layer.transition()
+            .duration(1000)
+            .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
+
+        if (d.depth != 0) {
+            background.transition()
+                .duration(1000)
+                .attr("fill", d.background); //TODO can switch to d.background
+        }
+
+        setTimeout(release, 2000);
+        selected = d.url;
     }
 }
 
@@ -410,68 +424,92 @@ var carouselPos;
 var currentImage;
 var currentNode;
 
-function drawCarousel(node){
+function drawCarousel(node) {
     currentCarousel = node.carousel;
     carouselPos = 0;
     currentNode = node;
     d3.select("#" + node.url).classed("hidden", true);
-    drawCarouselImage(carouselPos);
-    drawText("X",width * 0.9, height * 0.15,removeCarousel);
-    drawText("<", width * 0.1, height * 0.5, decCarousel);
-    drawText(">", width * 0.9, height * 0.5, incCarousel);
-    drawText(node.id, width * 0.1, height * 0.15);
+    drawIcon("fa-times", width * 0.85, height * 0.15, removeCarousel);
+    drawIcon("fa-arrow-left", width * 0.15, height * 0.5, decCarousel);
+    drawIcon("fa-arrow-right", width * 0.85, height * 0.5, incCarousel);
+    drawText(node.id, width * 0.15, height * 0.15, "black", "white", 40);
+    drawCarouselImage(currentCarousel[carouselPos]);
 }
 
-function drawText(text, x, y, callback){
-    var t = d3.select("body").append("h3")
-    .style("background", "white")
-    .style("padding", "5px")
-    .attr("class","carousel")
-    .style("position", "absolute")
-    .style("left", x+"px")
-    .style("top", y+"px")
-    .html(text);
+function drawText(text, x, y, txtcolor, background, size, callback) {
+    var t = d3.select("body").append("div")
+        .style("background", background)
+        .style("padding", "5px")
+        .style("font-size", size)
+        .style("color", txtcolor)
+        .attr("class", "carousel")
+        .style("position", "absolute")
+        .style("left", x + "px")
+        .style("top", y + "px")
+        .html(text)
+        .style("opacity", 0)
+        .style("transform", "translate(-50%,-50%)");
+    t.transition().duration(500).style("opacity", 1);
     if (callback !== undefined) {
         t.on("click", callback);
     }
 }
 
-function incCarousel(){
-    carouselPos = (carouselPos + 1) % currentCarousel.length;
-    currentImage.remove();
-    drawCarouselImage(carouselPos);
+function drawIcon(cl, x, y, callback) {
+    var t = d3.select("body").append("i")
+        .style("opacity", 0)
+        .attr("class", `carousel fas fa-3x ${cl}`)
+        .style("position", "absolute")
+        .style("left", x + "px")
+        .style("top", y + "px")
+        .style("opacity", 0);
+    setTimeout(() => {
+        var t = d3.select("."+cl)
+        t.attr("color", "gray")
+        t.transition().duration(500).style("opacity", 1);
+        if (callback !== undefined) {
+            t.on("click", callback);
+        }
+    }, 500)
+
 }
 
-function decCarousel(){
+function incCarousel() {
+    carouselPos = (carouselPos + 1) % currentCarousel.length;
+    currentImage.remove();
+    drawCarouselImage(currentCarousel[carouselPos]);
+}
+
+function decCarousel() {
     if (carouselPos == 0) {
         carouselPos = currentCarousel.length - 1;
-    }  else {
+    } else {
         carouselPos = carouselPos - 1;
     }
     currentImage.remove();
-    drawCarouselImage(carouselPos);
+    drawCarouselImage(currentCarousel[carouselPos]);
 }
 
-function drawCarouselImage(pos){
+function drawCarouselImage(img) {
     currentImage = svg.append("image")
-    .attr("x", 0.05 * width)
-    .attr("y", 0.1 * height)
-    .attr("width", 0.9 * width)
-    .attr("height", 0.8 * height)
-    .attr("xlink:href",currentCarousel[carouselPos])
-    .style("opacity", 0)
-    .attr("class", "overlay carousel");
+        .attr("x", 0.05 * width)
+        .attr("y", 0.1 * height)
+        .attr("width", 0.9 * width)
+        .attr("height", 0.8 * height)
+        .attr("xlink:href", img)
+        .style("opacity", 0)
+        .attr("class", "overlay carousel");
     currentImage.transition().duration(500).style("opacity", 1);
 }
 
-function removeCarousel(){
+function removeCarousel() {
     d3.selectAll(".carousel").remove();
-    if (currentNode != undefined){
-        d3.select("#"+currentNode.url).classed("hidden", false);
+    if (currentNode != undefined) {
+        d3.select("#" + currentNode.url).classed("hidden", false);
     }
 }
 
-function positionZoomedNodes(d, k){
+function positionZoomedNodes(d, k) {
     node.classed("hidden", true);
     d3.select("#" + d.url).classed("hidden", false);
     //Links: source is always the parent, target is always the child
@@ -479,112 +517,83 @@ function positionZoomedNodes(d, k){
     var childrenLinks = links.filter((l) => l.source.id == d.id);
     var siblings = nodes.filter((n) => n.id != d.id && d.hasOwnProperty("parent") && n.parent == d.parent);
 
-    if (parentLinks.length > 0){ //node has parent
+    if (parentLinks.length > 0) { //node has parent
         var parentLink = parentLinks[0];
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1 + 0.3*parentLink.source.depth);
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1 + 0.1 * parentLink.source.depth);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
-        .attr("transform", function (d) {
-            return "translate(" + (pos[0] + parentLink.source.x)+ "," + (pos[1] + parentLink.source.y) + ")";
-        });
+            .attr("transform", function (d) {
+                return "translate(" + (pos[0] + parentLink.source.x) + "," + (pos[1] + parentLink.source.y) + ")";
+            });
         setTimeout(() => {
             var labelpos = calculateOverlayPositionAbsolute(parentLink.target, parentLink.source, 0.9);
-            drawOverlabel(parentLink.source, labelpos, 40);
+            drawText(parentLink.source.id, labelpos[0], window.innerHeight * 0.1 + labelpos[1], parentLink.source.txtcolor, "none", 40);
         }, 500);
-
-
-        // code for drawing labels in opposite side as parent
-
-        // if (d.depth == 2){
-        //     var oppositeParent = {"x": 2 * d.x - parentLink.source.x, "y":2 * d.y - parentLink.source.y, "id":d.id};
-        //     setTimeout(() => {
-        //         var labelpos = calculateOverlayPositionAbsolute(parentLink.target, oppositeParent, 0.9);
-        //         drawOverlabel(oppositeParent, labelpos, 40);
-        //     }, 500);  
-        // }
     }
 
-    if (childrenLinks.length > 0){ //node has children
+    if (childrenLinks.length > 0) { //node has children
         childrenLinks.forEach((l) => {
             var pos = calculateOverlayPosition(l.source, l.target, k, 0.95);
             var childNode = d3.select("#" + l.target.url);
             childNode.classed("hidden", false);
             childNode.transition().duration(1000)
-            .attr("transform", function (d) {
-                return "translate(" + (pos[0] + l.target.x) + "," + (pos[1] + l.target.y) + ")";
-            });
+                .attr("transform", function (d) {
+                    return "translate(" + (pos[0] + l.target.x) + "," + (pos[1] + l.target.y) + ")";
+                });
             setTimeout(() => {
-                var labelpos = calculateOverlayPositionAbsolute(l.source,l.target, 0.9);
-                drawOverlabel(l.target, labelpos, 24);
+                var labelpos = calculateOverlayPositionAbsolute(l.source, l.target, 0.9);
+                drawText(l.target.id, labelpos[0], window.innerHeight * 0.1 + labelpos[1], l.target.txtcolor, "none", 24);
             }, 500);
         });
     }
 
-    // //TODO handle siblings
-    // if (siblings.length > 0 && node.depth > 1){//node has siblings
-    //     siblings.forEach((s) => {
-    //         var siblingNode = d3.select("#" + s.url);
-    //         setTimeout(() => {
-    //             var labelpos = calculateOverlayPositionAbsolute(d, s, 0.8);
-    //             var labelpos_ = calculateOverlayPositionAbsolute(d, s, 0.9);
-    //             var overlay = svg.append("line")
-    //                 .attr("x1",labelpos[0])  
-    //                 .attr("y1",labelpos[1])  
-    //                 .attr("x2",labelpos_[0])  
-    //                 .attr("y2",labelpos_[1]) 
-    //                 .attr("class", "overlay") 
-    //                 .attr("stroke","gray")  
-    //                 .attr("stroke-width", 8)  
-    //                 .attr("marker-end","url(#arrow)")
-    //                 .on("click", () => siblingNode.dispatch('click'));
-    //             overlay.transition().duration(500)
-    //             .style("opacity", 1);
-    //         }, 500);
-    //     });
-    // }
-}
-
-function drawOverlabel(node, position, txtsize){
-    var overlabel = svg.append("text")
-    .text(node.id)
-    .attr('text-anchor', "middle")
-    .attr('x', position[0])
-    .attr('y', position[1])
-    .attr("font-size", txtsize)
-    .attr("fill", node.hasOwnProperty("txtcolor") ? node.txtcolor : "black")
-    .style("opacity", 0)
-    .attr("class","overlay");
-    overlabel.transition().duration(500)
-    .style("opacity", 1);
-    return overlabel;
+    siblings.forEach((d)=>{
+        //override sibling clicks
+        var n = d3.select("#" + d.url);
+        n.on("click", backgroundClick);
+    });
 }
 
 //calculate the position of node B preserving relative positioning
 //assuming that node A is the center of the chart and B is centered on an edge
-function calculateOverlayPosition(a, b, k, m){
-    var ax = a.x, ay = a.y, bx = b.x, by = b.y;
-    var diffx = bx - ax, diffy = by - ay;
-    var scalingRatio = width/2/k / Math.abs(diffx);
-    if (scalingRatio * Math.abs(diffy) > height/2/k) {
-        scalingRatio = height/2/k / Math.abs(diffy);
+function calculateOverlayPosition(a, b, k, m, dx, dy) {
+    var ax = a.x,
+        ay = a.y,
+        bx = b.x,
+        by = b.y;
+    var diffx = bx - ax,
+        diffy = by - ay;
+    var scalingRatio = width / 2 / k / Math.abs(diffx);
+    if (scalingRatio * Math.abs(diffy) > height / 2 / k) {
+        scalingRatio = height / 2 / k / Math.abs(diffy);
+    }
+    if (dx == undefined) {
+        dx = 1.05
+    }
+    if (dy == undefined) {
+        dy = 1.325
     }
     scalingRatio = scalingRatio * m;
-    var posx = (scalingRatio * diffx) * 0.95 - diffx,
-    posy = (scalingRatio * diffy) * 1.4 - diffy; //force larger offset in y direction to reduce overlap
+    var posx = (scalingRatio * diffx) * dx - diffx,
+        posy = (scalingRatio * diffy) * dy - diffy; //force larger offset in y direction to reduce overlap
     return [posx, posy];
 }
 
-function calculateOverlayPositionAbsolute(a, b, r){
+function calculateOverlayPositionAbsolute(a, b, r) {
     //smaller r means closer to center
-    var ax = a.x, ay = a.y, bx = b.x, by = b.y;
-    var diffx = bx - ax, diffy = by - ay;
-    var scalingRatio = width/2 / Math.abs(diffx);
-    if (scalingRatio * Math.abs(diffy) > height/2) {
-        scalingRatio = height/2 / Math.abs(diffy);
+    var ax = a.x,
+        ay = a.y,
+        bx = b.x,
+        by = b.y;
+    var diffx = bx - ax,
+        diffy = by - ay;
+    var scalingRatio = width / 2 / Math.abs(diffx);
+    if (scalingRatio * Math.abs(diffy) > height / 2) {
+        scalingRatio = height / 2 / Math.abs(diffy);
     }
-    var posx = (scalingRatio * diffx) * r + width/2,
-    posy = (scalingRatio * diffy) * r + height/2;
+    var posx = (scalingRatio * diffx) * r + width / 2,
+        posy = (scalingRatio * diffy) * r + height / 2;
     return [posx, posy];
 }
 
