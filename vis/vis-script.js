@@ -221,7 +221,7 @@ var background = svg.append("rect")
     .attr("stroke", "black")
     .style("opacity", 1)
     .attr("fill", "none");
-
+var carouselLayer = svg.append("g");
 var zoomable_layer = svg.append("g");
 var backgroundg = zoomable_layer.append("g");
 var backgroundg2 = zoomable_layer.append("g");
@@ -276,7 +276,7 @@ var blobs = node.append("path")
         yradius: widthScale(d.depth),
     }))
     .attr("stroke", (d) => d.brush)
-    .style("--animation-time", (d) => (2 * Math.random() + 2) + "s")
+    .style("--animation-time", (d) => (2 * Math.random() + 3) + "s")
     .attr("class", "pulse");
 
 var labels = node.append("text")
@@ -524,7 +524,7 @@ function decCarousel() {
 }
 
 function drawCarouselImage(img) {
-    currentImage = svg.append("image")
+    currentImage = carouselLayer.append("image")
         .attr("x", 0.2 * width)
         .attr("y", 0.1 * height)
         .attr("width", 0.6 * width)
@@ -544,7 +544,9 @@ function removeCarousel() {
 
 function positionZoomedNodes(d, k) {
     node.classed("hidden", true);
-    d3.select("#" + d.url).classed("hidden", false);
+    if (d.depth != 1) {
+        d3.select("#" + d.url).classed("hidden", false);
+    }
     //Links: source is always the parent, target is always the child
     var parentLinks = links.filter((l) => l.target.id == d.id);
     var childrenLinks = links.filter((l) => l.source.id == d.id);
@@ -552,7 +554,7 @@ function positionZoomedNodes(d, k) {
 
     if (parentLinks.length > 0) { //node has parent
         var parentLink = parentLinks[0];
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1.1 - 0.15 * parentLink.source.depth);
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1.1);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
@@ -613,10 +615,10 @@ function calculateOverlayPosition(a, b, k, m, dx, dy) {
         scalingRatio = height / 2 / k / Math.abs(diffy);
     }
     if (dx == undefined) {
-        dx = 1.05
+        dx = 1
     }
     if (dy == undefined) {
-        dy = 1.325
+        dy = 1.4
     }
     scalingRatio = scalingRatio * m;
     var posx = (scalingRatio * diffx) * dx - diffx,
