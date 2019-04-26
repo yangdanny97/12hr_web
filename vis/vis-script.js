@@ -81,7 +81,7 @@ let nodes = [{
         "background": "#FF9A3A",
         "vback": "#FFE9DE",
         "txtcolor": "white",
-        "vpattern": "heartback",
+        "vpattern": "heartback2",
     },
     {
         "key": 11,
@@ -389,7 +389,8 @@ function nodeClick(d) {
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             //TODO TRANSPARENT GIF?
-            // drawCarouselImage("static/mindcover.gif");
+            console.log("aaa");
+            drawCarouselImage("static/mindcover.gif");
         } else if (d.depth == 2 && changeNode) { //deeper nodes get clicked cause graph to fade out and repositions nodes
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
@@ -443,7 +444,7 @@ function backgroundClick() {
         background.transition()
             .duration(1000)
             .attr("fill", "none");
-        setTimeout(release, 1000);
+        setTimeout(release, 1500);
         setTimeout(() => {
             d3.selectAll(".voronoi").transition().duration(500).style("opacity", 1);
         }, 1000);
