@@ -81,7 +81,7 @@ let nodes = [{
         "background": "#FF9A3A",
         "vback": "#FFE9DE",
         "txtcolor": "white",
-        "vpattern": "heartback2",
+        "vpattern": "heartback",
     },
     {
         "key": 11,
@@ -319,8 +319,8 @@ background.on("click", backgroundClick);
 //voronoi_background
 var voronoi_nodes = nodes.filter((n) => n.key === 1 || n.key === 2 || n.key === 3);
 var voronoi = d3.voronoi().extent([
-    [-2 * width, -2 * height],
-    [2 * width, 2 * height]
+    [-.45 * width, -.45 * height],
+    [1.45 * width, 1.45 * height]
 ]);
 var vertices = voronoi_nodes.map((n) => [n.x, n.y]);
 
@@ -336,7 +336,8 @@ var voronoi_paths = backgroundg2.selectAll("path")
     .enter().append("path")
     .attr("class", "voronoi")
     .attr("fill", (d, i) => `url(#${voronoi_nodes[i].vpattern})`)
-    .attr("d", (d) => "M" + d.join("L") + "Z");
+    .attr("d", (d) => "M" + d.join("L") + "Z")
+    .attr("opacity",0.75);
 
 voronoi_paths.on("click", backgroundClick);
 voronoi_back.on("click", backgroundClick);
@@ -369,7 +370,7 @@ function nodeClick(d) {
             d3.selectAll(".voronoi").style("opacity", 0);
         }
 
-        d3.selectAll(".voronoi").style("opacity", d.depth == 0 ? 1 : 0);
+        d3.selectAll(".voronoi").style("opacity", d.depth== 0 ? 0.75s:0);
         d3.selectAll(".vback").transition().duration(1500).style("opacity", 0);
 
         if (d.depth == 0) {
@@ -390,7 +391,7 @@ function nodeClick(d) {
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             //TODO TRANSPARENT GIF?
             console.log("aaa");
-            drawCarouselImage("static/mindcover.gif");
+            setTimeout(() => drawCarouselImage("static/mindcover.gif"), 1500);
         } else if (d.depth == 2 && changeNode) { //deeper nodes get clicked cause graph to fade out and repositions nodes
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
@@ -446,7 +447,7 @@ function backgroundClick() {
             .attr("fill", "none");
         setTimeout(release, 1500);
         setTimeout(() => {
-            d3.selectAll(".voronoi").transition().duration(500).style("opacity", 1);
+            d3.selectAll(".voronoi").transition().duration(1500).style("opacity", 0.75);
         }, 1000);
         selected = "";
     }
@@ -580,7 +581,7 @@ function positionZoomedNodes(d, k) {
 
     if (childrenLinks.length > 0) { //node has children
         childrenLinks.forEach((l) => {
-            var pos = calculateOverlayPosition(l.source, l.target, k, 0.9);
+            var pos = calculateOverlayPosition(l.source, l.target, k, 0.9 - 0.05 * d.depth);
             var childNode = d3.select("#" + l.target.url);
             childNode.classed("hidden", false);
             childNode.transition().duration(1000)
