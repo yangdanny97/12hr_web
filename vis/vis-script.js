@@ -337,7 +337,7 @@ var voronoi_paths = backgroundg2.selectAll("path")
     .attr("class", "voronoi")
     .attr("fill", (d, i) => `url(#${voronoi_nodes[i].vpattern})`)
     .attr("d", (d) => "M" + d.join("L") + "Z")
-    .attr("opacity",0.75);
+    .attr("opacity", 0.75);
 
 voronoi_paths.on("click", backgroundClick);
 voronoi_back.on("click", backgroundClick);
@@ -366,12 +366,10 @@ function nodeClick(d) {
         if (changeNode) {
             removeOverlay();
             removeCarousel();
-        } else {
-            d3.selectAll(".voronoi").style("opacity", 0);
-        }
+        } 
+        d3.selectAll(".voronoi").style("opacity", 0);
 
-        d3.selectAll(".voronoi").style("opacity", d.depth== 0 ? 0.75s:0);
-        d3.selectAll(".vback").transition().duration(1500).style("opacity", 0);
+        d3.selectAll(".vback").transition().duration(1500).style("opacity", d.depth == 0 ? 1 : 0);
 
         if (d.depth == 0) {
             k = 1;
@@ -385,12 +383,14 @@ function nodeClick(d) {
                 .attr('height', 400)
                 .attr("class", "overlay")
                 .attr("xlink:href", "static/logo.png");
+            setTimeout(() => {
+                d3.selectAll(".voronoi").transition().duration(1500).style("opacity", 0.75);
+            }, 1000);
         } else if (d.depth == 1) {
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             //TODO TRANSPARENT GIF?
-            console.log("aaa");
             setTimeout(() => drawCarouselImage("static/mindcover.gif"), 1500);
         } else if (d.depth == 2 && changeNode) { //deeper nodes get clicked cause graph to fade out and repositions nodes
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
