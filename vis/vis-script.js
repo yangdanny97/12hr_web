@@ -91,7 +91,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 12,
@@ -101,7 +101,7 @@ let nodes = [{
         "brush": "#FF7141",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 13,
@@ -111,7 +111,7 @@ let nodes = [{
         "brush": "#FFD33C",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 2,
@@ -132,7 +132,7 @@ let nodes = [{
         "brush": "#7E9AFF",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 22,
@@ -142,7 +142,7 @@ let nodes = [{
         "brush": "#8CE3F3",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 23,
@@ -152,7 +152,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 3,
@@ -173,7 +173,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 32,
@@ -183,7 +183,7 @@ let nodes = [{
         "brush": "#5BDD5B",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     },
     {
         "key": 33,
@@ -193,7 +193,7 @@ let nodes = [{
         "brush": "#B3DC4E",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["static/forgingyourownpath.svg", "static/values.svg", "static/innervoiceoutervoice.svg"]
+        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
     }
 ];
 
@@ -224,10 +224,11 @@ var background = svg.append("rect")
     .style("opacity", 1)
     .attr("fill", "none");
 
-var voronoi_backg = svg.append("g");
-var voronoi_pathsg = svg.append("g");
+
 var carouselLayer = svg.append("g");
 var zoomable_layer = svg.append("g");
+var voronoi_backg = zoomable_layer.append("g");
+var voronoi_pathsg = zoomable_layer.append("g");
 
 var offsetX, offsetY, zoomLevel;
 
@@ -359,8 +360,14 @@ function removeOverlay() {
 }
 
 function nodeClick(d) {
+    nodeClick(d, 0);
+}
+
+function nodeClick(d, pos) {
     if (acquire()) {
-        d3.event.stopPropagation();
+        if (d3.event) {
+            d3.event.stopPropagation();
+        }
         var changeNode = d.depth != currentDepth;
         var x = d.x,
             y = d.y,
@@ -400,9 +407,9 @@ function nodeClick(d) {
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
-            setTimeout(() => drawCarousel(d), 1500);
+            setTimeout(() => drawCarousel(d, pos), 1500);
         } else if (d.depth == 2) {
-            setTimeout(() => drawCarousel(d), 500);
+            setTimeout(() => drawCarousel(d, pos), 500);
         }
 
         //matrix zoom
@@ -464,11 +471,14 @@ var currentImage;
 var currentNode;
 
 function drawCarousel(node) {
+    drawCarousel(node,0);
+}
+
+function drawCarousel(node, pos) {
     currentCarousel = node.carousel;
-    carouselPos = 0;
+    carouselPos = pos;
     currentNode = node;
     d3.select("#" + node.url).classed("hidden", true);
-    drawIcon("fa-times", width * 0.85, height * 0.15, removeCarousel);
     drawIcon("fa-arrow-left", width * 0.15, height * 0.5, decCarousel);
     drawIcon("fa-arrow-right", width * 0.85, height * 0.5, incCarousel);
     drawText(node.id, width * 0.15, height * 0.2, "black", "white", 40);
@@ -535,7 +545,7 @@ function drawCarouselImage(img) {
         .attr("y", 0.1 * height)
         .attr("width", 0.6 * width)
         .attr("height", 0.8 * height)
-        .attr("xlink:href", img)
+        .attr("xlink:href", "static/"+img+".svg")
         .style("opacity", 0)
         .attr("class", "overlay carousel");
     currentImage.transition().duration(500).style("opacity", 1);
@@ -652,9 +662,19 @@ function calculateOverlayPositionAbsolute(a, b, r) {
 
 //allow zooming to specific nodes with # in the URL
 let url = window.location.href;
-if (url.lastIndexOf("#") >= 0) {
-    let element_id = url.substring(url.lastIndexOf('#'));
-    d3.select(element_id).dispatch('click');
+let idPos = url.lastIndexOf('#');
+if (idPos >= 0) {
+    var visPos = url.lastIndexOf('-');
+    if (visPos >= 0) {
+        var element_id = url.substring(idPos+1, visPos);
+        var vis_id = url.substring(visPos+1);
+        var selectedN = nodes.filter((d) => d.id === element_id)[0];
+        var cPos = selectedN.carousel.findIndex((d) => d === vis_id);
+        nodeClick(selectedN, cPos);
+    } else {
+        var element_id = url.substring(idPos);
+        d3.select(element_id).dispatch('click');
+    }
 } else {
     backgroundClick();
 }
