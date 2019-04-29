@@ -570,7 +570,7 @@ function positionZoomedNodes(d, k) {
         setTimeout(() => {
             if (parentLink.source.url != "Wisdom") {
                 var labelpos = calculateOverlayPositionAbsolute(parentLink.target, parentLink.source, 0.9);
-                drawText(parentLink.source.id, labelpos[0], window.innerHeight * 0.1 + labelpos[1], parentLink.source.txtcolor, "none", 40);
+                drawText(parentLink.source.id, labelpos[0], window.innerHeight * 0.1 + labelpos[1], parentLink.source.txtcolor, "none", 40, () => nodeClick(parentLink.source));
             } else {
                 var labelpos = calculateOverlayPositionAbsolute(parentLink.target, parentLink.source, 0.95);
                 svg.append('image')
@@ -596,7 +596,7 @@ function positionZoomedNodes(d, k) {
                 });
             setTimeout(() => {
                 var labelpos = calculateOverlayPositionAbsolute(l.source, l.target, 0.9);
-                drawText(l.target.id, labelpos[0], window.innerHeight * 0.1 + labelpos[1], l.target.txtcolor, "none", 24);
+                drawText(l.target.id, labelpos[0], window.innerHeight * 0.1 + labelpos[1], l.target.txtcolor, "none", 24, () => nodeClick(l.target));
             }, 500);
         });
     }
