@@ -70,7 +70,7 @@ let nodes = [{
         "brush": "white",
         "background": "white",
         "txtcolor": "black",
-        "logo": "static/logo.png"
+        "logo": "static/logo-cropped.png"
     },
     {
         "key": 1,
@@ -197,6 +197,8 @@ let nodes = [{
     }
 ];
 
+let root = nodes[0];
+
 //some preprocessing
 nodes.forEach((d) => d.depth = d.key.toString().length);
 
@@ -221,10 +223,12 @@ var background = svg.append("rect")
     .attr("stroke", "black")
     .style("opacity", 1)
     .attr("fill", "none");
+
+var voronoi_backg = svg.append("g");
+var voronoi_pathsg = svg.append("g");
 var carouselLayer = svg.append("g");
 var zoomable_layer = svg.append("g");
-var backgroundg = zoomable_layer.append("g");
-var backgroundg2 = zoomable_layer.append("g");
+
 var offsetX, offsetY, zoomLevel;
 
 var maxNodeSize = 180;
@@ -324,14 +328,14 @@ var voronoi = d3.voronoi().extent([
 ]);
 var vertices = voronoi_nodes.map((n) => [n.x, n.y]);
 
-var voronoi_back = backgroundg.selectAll("path")
+var voronoi_back = voronoi_backg.selectAll("path")
     .data(voronoi.polygons(vertices))
     .enter().append("path")
     .attr("class", "vback")
     .attr("fill", (d, i) => voronoi_nodes[i].vback)
     .attr("d", (d) => "M" + d.join("L") + "Z");
 
-var voronoi_paths = backgroundg2.selectAll("path")
+var voronoi_paths = voronoi_pathsg.selectAll("path")
     .data(voronoi.polygons(vertices))
     .enter().append("path")
     .attr("class", "voronoi")
@@ -343,7 +347,7 @@ voronoi_paths.on("click", backgroundClick);
 voronoi_back.on("click", backgroundClick);
 
 function removeOverlay() {
-    d3.selectAll(".voronoi").style("opacity", 0);
+    voronoi_paths.style("opacity", 0);
     node.classed("hidden", false);
     labels.classed("hidden", false);
     d3.selectAll(".overlay").remove();
@@ -367,9 +371,9 @@ function nodeClick(d) {
             removeOverlay();
             removeCarousel();
         } 
-        d3.selectAll(".voronoi").style("opacity", 0);
+        voronoi_paths.style("opacity", 0);
 
-        d3.selectAll(".vback").transition().duration(1500).style("opacity", d.depth == 0 ? 1 : 0);
+        voronoi_back.transition().duration(1500).style("opacity", d.depth == 0 ? 1 : 0);
 
         if (d.depth == 0) {
             k = 1;
@@ -377,14 +381,14 @@ function nodeClick(d) {
                 .duration(500).style("opacity", 1);
             //special icon
             d3.select("#Wisdom").append('image')
-                .attr('x', -200)
-                .attr('y', -200)
-                .attr('width', 400)
-                .attr('height', 400)
+                .attr('x', -80)
+                .attr('y', -80)
+                .attr('width', 160)
+                .attr('height', 160)
                 .attr("class", "overlay")
-                .attr("xlink:href", "static/logo.png");
+                .attr("xlink:href", "static/logo-cropped.png");
             setTimeout(() => {
-                d3.selectAll(".voronoi").transition().duration(1500).style("opacity", 0.75);
+                voronoi_paths.transition().duration(1500).style("opacity", 0.75);
             }, 1000);
         } else if (d.depth == 1) {
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
@@ -396,9 +400,9 @@ function nodeClick(d) {
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
-            setTimeout(() => drawCarousel(d, ), 1500);
+            setTimeout(() => drawCarousel(d), 1500);
         } else if (d.depth == 2) {
-            setTimeout(() => drawCarousel(d, ), 500);
+            setTimeout(() => drawCarousel(d), 500);
         }
 
         //matrix zoom
@@ -412,7 +416,7 @@ function nodeClick(d) {
                 .attr("fill", d.background); //TODO can switch to d.background
         }
 
-        setTimeout(release, 2000);
+        setTimeout(release, 2500);
         selected = d.url;
     }
 }
@@ -425,12 +429,13 @@ function backgroundClick() {
 
         //special icon
         d3.select("#Wisdom").append('image')
-            .attr('x', -200)
-            .attr('y', -200)
-            .attr('width', 400)
-            .attr('height', 400)
+            .attr('x', -80)
+            .attr('y', -80)
+            .attr('width', 160)
+            .attr('height', 160)
             .attr("class", "overlay")
-            .attr("xlink:href", "static/logo.png");
+            .attr("xlink:href", "static/logo-cropped.png")
+            .on('click', () => nodeClick(root));
 
         var x = width / 2,
             y = height / 2,
@@ -445,10 +450,10 @@ function backgroundClick() {
         background.transition()
             .duration(1000)
             .attr("fill", "none");
-        setTimeout(release, 1500);
         setTimeout(() => {
-            d3.selectAll(".voronoi").transition().duration(1500).style("opacity", 0.75);
+            voronoi_paths.transition().duration(1500).style("opacity", 0.75);
         }, 1000);
+        setTimeout(release, 2500);
         selected = "";
     }
 }
@@ -555,7 +560,7 @@ function positionZoomedNodes(d, k) {
 
     if (parentLinks.length > 0) { //node has parent
         var parentLink = parentLinks[0];
-        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1.1);
+        var pos = calculateOverlayPosition(parentLink.target, parentLink.source, k, 1.1, 0.95, 1.4);
         var parentNode = d3.select("#" + parentLink.source.url);
         parentNode.classed("hidden", false);
         parentNode.transition().duration(1000)
@@ -569,19 +574,20 @@ function positionZoomedNodes(d, k) {
             } else {
                 var labelpos = calculateOverlayPositionAbsolute(parentLink.target, parentLink.source, 0.95);
                 svg.append('image')
-                    .attr('x', -125 + labelpos[0])
-                    .attr('y', -125 + labelpos[1])
-                    .attr('width', 250)
-                    .attr('height', 250)
+                    .attr('x', -40 + labelpos[0])
+                    .attr('y', -40 + labelpos[1])
+                    .attr('width', 80)
+                    .attr('height', 80)
                     .attr("class", "overlay")
-                    .attr("xlink:href", "static/logo.png");
+                    .attr("xlink:href", "static/logo-cropped.png")
+                    .on('click', () => nodeClick(parentLink.source));
             }
         }, 500);
     }
 
     if (childrenLinks.length > 0) { //node has children
         childrenLinks.forEach((l) => {
-            var pos = calculateOverlayPosition(l.source, l.target, k, 0.9 - 0.05 * d.depth);
+            var pos = calculateOverlayPosition(l.source, l.target, k, 0.9 - 0.05 * d.depth, 1.1, 1.4);
             var childNode = d3.select("#" + l.target.url);
             childNode.classed("hidden", false);
             childNode.transition().duration(1000)
