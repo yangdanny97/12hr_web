@@ -360,15 +360,15 @@ function removeOverlay() {
 }
 
 function nodeClick(d) {
-    nodeClick(d, 0);
+    nodeClick_(d, 0);
 }
 
-function nodeClick(d, pos) {
-    if (acquire()) {
+function nodeClick_(d, pos) {
+    var changeNode = d.depth != currentDepth;
+    if (changeNode && acquire()) {
         if (d3.event) {
             d3.event.stopPropagation();
         }
-        var changeNode = d.depth != currentDepth;
         var x = d.x,
             y = d.y,
             k = maxNodeSize / widthScale(d.depth) * 1.1;
@@ -402,7 +402,8 @@ function nodeClick(d, pos) {
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             //TODO TRANSPARENT GIF?
-            setTimeout(() => drawCarouselImage("static/mindcover.gif"), 1500);
+            setTimeout(() => drawCarouselImage("mindcover.gif", false), 1500);
+            setURL(d.url,null);
         } else if (d.depth == 2 && changeNode) { //deeper nodes get clicked cause graph to fade out and repositions nodes
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
@@ -428,10 +429,22 @@ function nodeClick(d, pos) {
     }
 }
 
+function setURL(node, vis){
+    var newURL = "";
+    if (node != null){
+        newURL += "#"+node;
+        if(vis !=null){
+            newURL += "-"+vis;
+        }
+    }
+    window.location.hash = newURL;
+}
+
 function backgroundClick() {
     if (selected != "" && acquire()) {
         removeOverlay();
         removeCarousel();
+        setURL(null,null);
         d3.selectAll(".vback").style("opacity", 1);
 
         //special icon
@@ -470,19 +483,16 @@ var carouselPos;
 var currentImage;
 var currentNode;
 
-function drawCarousel(node) {
-    drawCarousel(node,0);
-}
-
 function drawCarousel(node, pos) {
     currentCarousel = node.carousel;
     carouselPos = pos;
     currentNode = node;
+    setURL(node.url, node.carousel[pos]);
     d3.select("#" + node.url).classed("hidden", true);
     drawIcon("fa-arrow-left", width * 0.15, height * 0.5, decCarousel);
     drawIcon("fa-arrow-right", width * 0.85, height * 0.5, incCarousel);
     drawText(node.id, width * 0.15, height * 0.2, "black", "white", 40);
-    drawCarouselImage(currentCarousel[carouselPos]);
+    drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
 function drawText(text, x, y, txtcolor, background, size, callback) {
@@ -526,7 +536,8 @@ function drawIcon(cl, x, y, callback) {
 function incCarousel() {
     carouselPos = (carouselPos + 1) % currentCarousel.length;
     currentImage.remove();
-    drawCarouselImage(currentCarousel[carouselPos]);
+    setURL(currentNode.url, currentCarousel[carouselPos]);
+    drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
 function decCarousel() {
@@ -536,16 +547,17 @@ function decCarousel() {
         carouselPos = carouselPos - 1;
     }
     currentImage.remove();
-    drawCarouselImage(currentCarousel[carouselPos]);
+    setURL(currentNode.url, currentCarousel[carouselPos]);
+    drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
-function drawCarouselImage(img) {
+function drawCarouselImage(img, addSVG) {
     currentImage = carouselLayer.append("image")
         .attr("x", 0.2 * width)
         .attr("y", 0.1 * height)
         .attr("width", 0.6 * width)
         .attr("height", 0.8 * height)
-        .attr("xlink:href", "static/"+img+".svg")
+        .attr("xlink:href", "static/"+img+((addSVG) ? ".svg" : ""))
         .style("opacity", 0)
         .attr("class", "overlay carousel");
     currentImage.transition().duration(500).style("opacity", 1);
@@ -662,17 +674,17 @@ function calculateOverlayPositionAbsolute(a, b, r) {
 
 //allow zooming to specific nodes with # in the URL
 let url = window.location.href;
-let idPos = url.lastIndexOf('#');
-if (idPos >= 0) {
-    var visPos = url.lastIndexOf('-');
+let hash = window.location.hash;
+if (hash != "" && hash != null && hash != undefined && hash != "#") {
+    var visPos = hash.lastIndexOf('-');
     if (visPos >= 0) {
-        var element_id = url.substring(idPos+1, visPos);
-        var vis_id = url.substring(visPos+1);
+        var element_id = hash.substring(1, visPos);
+        var vis_id = hash.substring(visPos+1);
         var selectedN = nodes.filter((d) => d.id === element_id)[0];
         var cPos = selectedN.carousel.findIndex((d) => d === vis_id);
         nodeClick(selectedN, cPos);
     } else {
-        var element_id = url.substring(idPos);
+        var element_id = hash.substring(idPos);
         d3.select(element_id).dispatch('click');
     }
 } else {
