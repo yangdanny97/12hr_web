@@ -8,6 +8,24 @@
     integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous">
 </script>
 <style>
+     a.close {
+ font-size: 30px;
+ font-family: 'Courier New', Courier, monospace;
+ color: gray;
+ display: inline-block;
+ margin-right: 20px;
+ padding-top: 0px;
+ border-bottom: 5px solid yellow;
+}
+a.close:hover {
+  font-size: 30px;
+  font-family: 'Courier New', Courier, monospace;
+  color: gray;
+  display: inline-block;
+  margin-right: 20px;
+  padding-top: 0px;
+  border-bottom: 5px solid darkkhaki;
+ }
     :root {
         --animation-time: 3s;
     }
@@ -78,8 +96,8 @@
 
 <body>
     <div id="top" class="row">
-        <div id="skip" class="topbtn col-sm-2 offset-sm-10">ABOUT</div>
-    </div>
+            <div id="skip" class="topbtn col-sm-2 offset-sm-10"><a class = "close" href = "../about.html">ABOUT</a></div>
+        </div>
     <svg id="vis">
         <defs>
             <marker id="arrow" markerUnits="strokeWidth" markerWidth="12" markerHeight="12" viewBox="0 0 12 12" refX="6"
