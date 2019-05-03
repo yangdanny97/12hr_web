@@ -11,22 +11,22 @@
   font-style: normal;
 }
 span.close {
- font-size: 30px;
+ font-size: 25px;
  font-family: 'Courier New', Courier, monospace;
- color: gray;
+ color: #484848;
  display: inline-block;
  margin-right: 20px;
- padding-top: 20px;
- border-bottom: 5px solid yellow;
+ padding-top: 15px;
+ border-bottom: 5px solid  #FFFC33;
 }
 span.close:hover {
-  font-size: 30px;
+  font-size: 25px;
   font-family: 'Courier New', Courier, monospace;
-  color: gray;
+  color: #484848;
   display: inline-block;
   margin-right: 20px;
-  padding-top: 20px;
-  border-bottom: 5px solid darkkhaki;
+  padding-top: 15px;
+  border-bottom: 5px solid #BBBBBB;
  }
 
 p.main-header {
