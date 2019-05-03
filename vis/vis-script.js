@@ -492,7 +492,7 @@ function drawCarousel(node, pos) {
     drawIcon("fa-arrow-left", width * 0.15, height * 0.5, decCarousel);
     drawIcon("fa-arrow-right", width * 0.85, height * 0.5, incCarousel);
     drawText(node.id, width * 0.15, height * 0.2, "black", "none", 40);
-    drawText("Copy link to clipboard", width * 0.85, height * 0.2, undefined, "none", 20, () => copyToClipboard(window.location.href));
+    drawText("Copy link", width * 0.85, height * 0.2, undefined, "none", 20, () => copyToClipboard(window.location.href));
     drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
