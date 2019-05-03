@@ -91,7 +91,13 @@ a.close:hover {
                                   supported by Chrome and Opera */
     }
 
-    svg.carousel:hover{
+    svg.carousel, div.carousel{
+        -moz-transition: all .2s ease-in;
+        -o-transition: all .2s ease-in;
+        -webkit-transition: all .2s ease-in;
+    }
+
+    svg.carousel:hover, div.carousel:hover{
         color: silver;
     }
 </style>

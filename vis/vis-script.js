@@ -91,7 +91,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["friendswithbenefits", "friendswithex", "giving", "horizons", "ldr", "right", "roses", "sex", "soulmates", "talking", "waldo", "walls"]
     },
     {
         "key": 12,
@@ -101,7 +101,7 @@ let nodes = [{
         "brush": "#FF7141",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["parentchild", "sibling"]
     },
     {
         "key": 13,
@@ -111,7 +111,7 @@ let nodes = [{
         "brush": "#FFD33C",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["coldwarm", "emptypromises", "misalignment", "pedestal", "proximity", "stairs"]
     },
     {
         "key": 2,
@@ -132,7 +132,7 @@ let nodes = [{
         "brush": "#7E9AFF",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["fools"]
     },
     {
         "key": 22,
@@ -142,7 +142,7 @@ let nodes = [{
         "brush": "#8CE3F3",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["confirmation", "correlation", "decoy", "forbidden", "proportion"]
     },
     {
         "key": 23,
@@ -152,7 +152,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["execution", "productivitycreativity", "tasking"]
     },
     {
         "key": 3,
@@ -173,7 +173,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["breakfree", "fears", "heartofgold", "lifeapproaches", "path", "values", "voice"]
     },
     {
         "key": 32,
@@ -183,17 +183,17 @@ let nodes = [{
         "brush": "#5BDD5B",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["closure", "devotion", "scarecrow", "songs", "time"]
     },
     {
         "key": 33,
         "parent": 3,
-        "id": "Emotion",
-        "url": "Emotion",
+        "id": "Emotions",
+        "url": "Emotions",
         "brush": "#B3DC4E",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["forgingyourownpath", "values", "innervoiceoutervoice"]
+        "carousel": ["closure2", "elephant", "forgiving", "names", "onions", "peer pressure", "sadness", "sayingthenicething"]
     }
 ];
 
@@ -491,7 +491,8 @@ function drawCarousel(node, pos) {
     d3.select("#" + node.url).classed("hidden", true);
     drawIcon("fa-arrow-left", width * 0.15, height * 0.5, decCarousel);
     drawIcon("fa-arrow-right", width * 0.85, height * 0.5, incCarousel);
-    drawText(node.id, width * 0.15, height * 0.2, "black", "white", 40);
+    drawText(node.id, width * 0.15, height * 0.2, "black", "none", 40);
+    drawText("Copy link to clipboard", width * 0.85, height * 0.2, undefined, "none", 20, () => copyToClipboard(window.location.href));
     drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
@@ -500,7 +501,6 @@ function drawText(text, x, y, txtcolor, background, size, callback) {
         .style("background", background)
         .style("padding", "5px")
         .style("font-size", size)
-        .style("color", txtcolor)
         .attr("class", "carousel")
         .style("position", "absolute")
         .style("left", x + "px")
@@ -509,6 +509,9 @@ function drawText(text, x, y, txtcolor, background, size, callback) {
         .style("opacity", 0)
         .style("transform", "translate(-50%,-50%)");
     t.transition().duration(500).style("opacity", 1);
+    if (txtcolor !== undefined) {
+        t.style("color", txtcolor);
+    }
     if (callback !== undefined) {
         t.on("click", callback);
     }
@@ -557,7 +560,7 @@ function drawCarouselImage(img, addSVG) {
         .attr("y", 0.1 * height)
         .attr("width", 0.6 * width)
         .attr("height", 0.8 * height)
-        .attr("xlink:href", "static/"+img+((addSVG) ? ".svg" : ""))
+        .attr("xlink:href", "static/"+((addSVG) ? "svgs/"+currentNode.url.toLowerCase()+"/" : "")+img+((addSVG) ? ".svg" : ""))
         .style("opacity", 0)
         .attr("class", "overlay carousel");
     currentImage.transition().duration(500).style("opacity", 1);
@@ -690,3 +693,13 @@ if (hash != "" && hash != null && hash != undefined && hash != "#") {
 } else {
     backgroundClick();
 }
+
+
+function copyToClipboard(str) {
+    const el = document.createElement('textarea');
+    el.value = str;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+};
