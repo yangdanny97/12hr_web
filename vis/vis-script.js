@@ -132,7 +132,7 @@ let nodes = [{
         "brush": "#7E9AFF",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["fools"]
+        "carousel": ["fools", "trees"]
     },
     {
         "key": 22,
@@ -193,7 +193,7 @@ let nodes = [{
         "brush": "#B3DC4E",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["closure2", "elephant", "forgiving", "names", "onions", "peer pressure", "sadness", "sayingthenicething"]
+        "carousel": ["elephant", "forgiving", "names", "onions", "peer pressure", "sadness", "sayingthenicething"]
     }
 ];
 
@@ -377,7 +377,7 @@ function nodeClick_(d, pos) {
         if (changeNode) {
             removeOverlay();
             removeCarousel();
-        } 
+        }
         voronoi_paths.style("opacity", 0);
 
         voronoi_back.transition().duration(1500).style("opacity", d.depth == 0 ? 1 : 0);
