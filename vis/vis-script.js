@@ -82,6 +82,7 @@ let nodes = [{
         "vback": "#FFE9DE",
         "txtcolor": "white",
         "vpattern": "heartback",
+        "gif": "heartcover.png"
     },
     {
         "key": 11,
@@ -123,6 +124,7 @@ let nodes = [{
         "vback": "#E4FAFF",
         "vpattern": "mindback",
         "txtcolor": "white",
+        "gif": "mindcover-compressed.gif"
     },
     {
         "key": 21,
@@ -164,6 +166,7 @@ let nodes = [{
         "txtcolor": "white",
         "vback": "#F4FFE7",
         "vpattern": "soulback",
+        "gif": "soulcover.png"
     },
     {
         "key": 31,
@@ -183,7 +186,7 @@ let nodes = [{
         "brush": "#5BDD5B",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["closure", "devotion", "scarecrow", "songs", "time"]
+        "carousel": ["devotion", "scarecrow", "songs", "time"]
     },
     {
         "key": 33,
@@ -193,7 +196,7 @@ let nodes = [{
         "brush": "#B3DC4E",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["elephant", "forgiving", "names", "onions", "peer pressure", "sadness", "sayingthenicething"]
+        "carousel": ["closure", "elephant", "forgiving", "names", "onions", "peer pressure", "sadness", "sayingthenicething"]
     }
 ];
 
@@ -401,8 +404,7 @@ function nodeClick_(d, pos) {
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
-            //TODO TRANSPARENT GIF?
-            setTimeout(() => drawCarouselImage("mindcover.gif", false), 1500);
+            setTimeout(() => drawCarouselImage(d.gif, false), 1500);
             setURL(d.url,null);
         } else if (d.depth == 2 && changeNode) { //deeper nodes get clicked cause graph to fade out and repositions nodes
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
