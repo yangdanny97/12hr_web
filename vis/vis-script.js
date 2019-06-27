@@ -1,5 +1,5 @@
-var animationLock = false;
-var currentDepth = 0;
+var animationLock = false; //true if some function has acquired the lock
+var currentDepth = 0; //current depth of zoom (0 for root node)
 
 //lock for animations
 function acquire() {
@@ -16,6 +16,9 @@ function release() {
 }
 
 //https://codepen.io/osublake/pen/vdzjyg (making blobs with d3)
+//options can specify a centerX, centerY, xradius, and yradius
+//specifying different xradius and yradius results in an oval-ish blob
+//actual distance of blob edge from center ranges from 90-100% of the specified radius value
 function getBlobPath(options) {
     var points = [];
     var slice = (Math.PI * 2) / options.numPoints;
@@ -63,26 +66,27 @@ function cardinal(data, closed, tension) {
     return closed ? path + "z" : path;
 }
 
+//definition of nodes
 let nodes = [{
-        "key": "",
-        "id": "Wisdom",
-        "url": "Wisdom",
-        "brush": "white",
-        "background": "white",
-        "txtcolor": "black",
-        "logo": "static/logo-cropped.png"
+        "key": "", //number of digits in key is used for depth
+        "id": "Wisdom", //unique identifier
+        "url": "Wisdom", //unique identifier with special characters removed
+        "brush": "white", //color of node
+        "background": "white", //color of background when zoomed in
+        "txtcolor": "black", //color of text
+        "logo": "static/logo-cropped.png" //for root: logo at center of node
     },
     {
         "key": 1,
-        "parent": 0,
+        "parent": 0, //for depth 1+ nodes: key of parent node
         "id": "Heart",
         "url": "Heart",
         "brush": "#FF9A3A",
         "background": "#FF9A3A",
-        "vback": "#FFE9DE",
+        "vback": "#FFE9DE", //for depth 1 nodes: voronoi back color
         "txtcolor": "white",
-        "vpattern": "heartback",
-        "gif": "heartcover.png"
+        "vpattern": "heartback", //for depthh 1 nodes: voronoi pattern
+        "gif": "heartcover.png" //for depth 1 nodes: special overlay
     },
     {
         "key": 11,
@@ -93,6 +97,7 @@ let nodes = [{
         "background": "#FFE9DE",
         "txtcolor": "black",
         "carousel": ["friendswithbenefits", "friendswithex", "giving", "horizons", "ldr", "right", "roses", "sex", "soulmates", "talking", "waldo", "walls"]
+        // ^ for depth 2 nodes: list of images to display in carousel
     },
     {
         "key": 12,
@@ -202,7 +207,7 @@ let nodes = [{
 
 let root = nodes[0];
 
-//some preprocessing
+//some preprocessing (needed to set up force-directed layout)
 nodes.forEach((d) => d.depth = d.key.toString().length);
 
 let links = [];
@@ -215,11 +220,12 @@ nodes.forEach(function (d) {
     }
 });
 
+//calculate width and height of d3 display area, 10% of screen height reserved for navbar
 var width = window.innerWidth,
     height = window.innerHeight * 0.9;
 var svg = d3.select("#vis").attr("width", width).attr("height", height);
 
-var background = svg.append("rect")
+var background = svg.append("rect") 
     .attr("id", "back")
     .attr("width", width)
     .attr("height", height)
@@ -227,19 +233,22 @@ var background = svg.append("rect")
     .style("opacity", 1)
     .attr("fill", "none");
 
-
+//this layer is for the image carousel overlay
 var carouselLayer = svg.append("g");
-var zoomable_layer = svg.append("g");
+//this layer will be transformed by the zoom, anything not in this layer will not be changed when zooming
+var zoomable_layer = svg.append("g"); 
+
+//for setting up voronoi background
 var voronoi_backg = zoomable_layer.append("g");
 var voronoi_pathsg = zoomable_layer.append("g");
 
-var offsetX, offsetY, zoomLevel;
+var offsetX, offsetY, zoomLevel; //variables used to calculate zooming
 
-var maxNodeSize = 180;
+var maxNodeSize = 180; //maximum node size (configurabe)
 
 var widthScale = d3.scaleLinear().domain([0, 3]).range([maxNodeSize, maxNodeSize / 4]);
 
-var selected;
+var selected; //holds selected node
 //define forces
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id((d) => d.id)
@@ -256,7 +265,7 @@ var simulation = d3.forceSimulation()
     .force("collide", d3.forceCollide()
         .radius((d) => widthScale(d.depth))
     )
-    .stop();
+    .stop(); //do not start the simulation immediately
 
 //create nodes and links
 var link = zoomable_layer.append("g")
@@ -301,7 +310,8 @@ simulation.nodes(nodes);
 simulation.force("link")
     .links(links);
 
-for (var i = 0; i < 600; ++i) simulation.tick();
+//run the simuation without moving anything
+for (var i = 0; i < 600; ++i) simulation.tick(); 
 //place nodes and links in final positions
 link.attr("x1", function (d) {
         return d.source.x;
@@ -316,6 +326,7 @@ link.attr("x1", function (d) {
         return d.target.y;
     });
 
+//move nodes to positions calculated by simulation
 node.attr("transform", function (d) {
     return "translate(" + d.x + "," + d.y + ")";
 });
@@ -324,7 +335,7 @@ node.attr("transform", function (d) {
 node.on('click', nodeClick);
 background.on("click", backgroundClick);
 
-//voronoi_background
+//voronoi_background - calculating the shapes for the 3 different patterns
 var voronoi_nodes = nodes.filter((n) => n.key === 1 || n.key === 2 || n.key === 3);
 var voronoi = d3.voronoi().extent([
     [-.45 * width, -.45 * height],
@@ -332,14 +343,14 @@ var voronoi = d3.voronoi().extent([
 ]);
 var vertices = voronoi_nodes.map((n) => [n.x, n.y]);
 
-var voronoi_back = voronoi_backg.selectAll("path")
+var voronoi_back = voronoi_backg.selectAll("path") // shapes filled with solid color
     .data(voronoi.polygons(vertices))
     .enter().append("path")
     .attr("class", "vback")
     .attr("fill", (d, i) => voronoi_nodes[i].vback)
     .attr("d", (d) => "M" + d.join("L") + "Z");
 
-var voronoi_paths = voronoi_pathsg.selectAll("path")
+var voronoi_paths = voronoi_pathsg.selectAll("path") // shapes filled with pattern
     .data(voronoi.polygons(vertices))
     .enter().append("path")
     .attr("class", "voronoi")
@@ -347,9 +358,12 @@ var voronoi_paths = voronoi_pathsg.selectAll("path")
     .attr("d", (d) => "M" + d.join("L") + "Z")
     .attr("opacity", 0.75);
 
+//treat these same as background
 voronoi_paths.on("click", backgroundClick);
 voronoi_back.on("click", backgroundClick);
 
+
+//clear any overlay from the screen, restore hidden nodes and position of all nodes
 function removeOverlay() {
     voronoi_paths.style("opacity", 0);
     node.classed("hidden", false);
@@ -362,12 +376,15 @@ function removeOverlay() {
         });
 }
 
+// standard node click function, called when node [d] is clicked, defaults to displaying carousel position 0
 function nodeClick(d) {
     nodeClick_(d, 0);
 }
 
+//focus on node [d] and display image at carousel position [pos] (if applicable)
 function nodeClick_(d, pos) {
     var changeNode = d.depth != currentDepth;
+    //if clicking on a different node than the current focus node, acquire lock and animate
     if (changeNode && acquire()) {
         if (d3.event) {
             d3.event.stopPropagation();
@@ -385,7 +402,7 @@ function nodeClick_(d, pos) {
 
         voronoi_back.transition().duration(1500).style("opacity", d.depth == 0 ? 1 : 0);
 
-        if (d.depth == 0) {
+        if (d.depth == 0) {//click root
             k = 1;
             labels.transition()
                 .duration(500).style("opacity", 1);
@@ -400,18 +417,20 @@ function nodeClick_(d, pos) {
             setTimeout(() => {
                 voronoi_paths.transition().duration(1500).style("opacity", 0.75);
             }, 1000);
-        } else if (d.depth == 1) {
+        } else if (d.depth == 1) {//click topic node
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             setTimeout(() => drawCarouselImage(d.gif, false), 1500);
             setURL(d.url,null);
         } else if (d.depth == 2 && changeNode) { //deeper nodes get clicked cause graph to fade out and repositions nodes
+            //click vis node that is different from current node
             setTimeout(() => positionZoomedNodes(d, k, x, y), 1000);
             labels.transition()
                 .duration(500).style("opacity", (d) => d.depth == currentDepth ? 0.8 : 0);
             setTimeout(() => drawCarousel(d, pos), 1500);
         } else if (d.depth == 2) {
+            //click vis node that is the same as current node
             setTimeout(() => drawCarousel(d, pos), 500);
         }
 
@@ -420,10 +439,10 @@ function nodeClick_(d, pos) {
             .duration(1000)
             .style("transform", "matrix(" + k + ",0,0," + k + "," + (-x * (k - 1) + (width / 2 - x)) + "," + (-y * (k - 1) + (height / 2 - y)) + ")");
 
-        if (d.depth != 0) {
+        if (d.depth != 0) { //change background color to match
             background.transition()
                 .duration(1000)
-                .attr("fill", d.background); //TODO can switch to d.background
+                .attr("fill", d.background); 
         }
 
         setTimeout(release, 2500);
@@ -431,6 +450,9 @@ function nodeClick_(d, pos) {
     }
 }
 
+//function for changing the URL displayed in the browser when a node is clicked
+//[node] is the node's URL field, [vis] is the name of the vis
+//so for node N and vis V, the hash is <shiro's url>/vis/#N-V
 function setURL(node, vis){
     var newURL = "";
     if (node != null){
@@ -442,6 +464,8 @@ function setURL(node, vis){
     window.location.hash = newURL;
 }
 
+//handler for when a user clicks on the background
+//resets zoom and several other things
 function backgroundClick() {
     if (selected != "" && acquire()) {
         removeOverlay();
@@ -480,11 +504,12 @@ function backgroundClick() {
     }
 }
 
-var currentCarousel;
-var carouselPos;
-var currentImage;
-var currentNode;
+var currentCarousel; //current carousel of images that is being displayed
+var carouselPos; //position in carousel of currently displayed image
+var currentImage; //current image element
+var currentNode; //current node that is being focused
 
+//draw carousel for [node], displaying image at position [pos]
 function drawCarousel(node, pos) {
     currentCarousel = node.carousel;
     carouselPos = pos;
@@ -498,6 +523,9 @@ function drawCarousel(node, pos) {
     drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
+//draw text element in overlay, with [text] contents in color [txtcolor], at position [x],[y]
+//can be highighted in [background] color, font size [size]
+//the element will call function [callback] if clicked (optional)
 function drawText(text, x, y, txtcolor, background, size, callback) {
     var t = d3.select("body").append("div")
         .style("background", background)
@@ -519,6 +547,9 @@ function drawText(text, x, y, txtcolor, background, size, callback) {
     }
 }
 
+//draw icon element in overlay at position [x],[y]
+//the icon code is [cl] (look up font-awesome css icons)
+//the element will call function [callback] if clicked (optional)
 function drawIcon(cl, x, y, callback) {
     var t = d3.select("body").append("i")
         .style("opacity", 0)
@@ -538,6 +569,7 @@ function drawIcon(cl, x, y, callback) {
 
 }
 
+//increment carousel position and change image
 function incCarousel() {
     carouselPos = (carouselPos + 1) % currentCarousel.length;
     currentImage.remove();
@@ -545,6 +577,7 @@ function incCarousel() {
     drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
+//decrement carousel position and change image
 function decCarousel() {
     if (carouselPos == 0) {
         carouselPos = currentCarousel.length - 1;
@@ -556,6 +589,8 @@ function decCarousel() {
     drawCarouselImage(currentCarousel[carouselPos], true);
 }
 
+//draw a carousel image at the center of the screen
+//the image will have file name [image] and must be stored under the correct directory
 function drawCarouselImage(img, addSVG) {
     currentImage = carouselLayer.append("image")
         .attr("x", 0.2 * width)
@@ -568,6 +603,7 @@ function drawCarouselImage(img, addSVG) {
     currentImage.transition().duration(500).style("opacity", 1);
 }
 
+//clears the carousel
 function removeCarousel() {
     d3.selectAll(".carousel").remove();
     if (currentNode != undefined) {
@@ -575,6 +611,8 @@ function removeCarousel() {
     }
 }
 
+//move nearby nodes so they are on the edge of screen when zoomed in on node [d]
+//[k] is a scaling factor
 function positionZoomedNodes(d, k) {
     node.classed("hidden", true);
     if (d.depth != 1) {
@@ -635,8 +673,9 @@ function positionZoomedNodes(d, k) {
     });
 }
 
-//calculate the position of node B preserving relative positioning
-//assuming that node A is the center of the chart and B is centered on an edge
+//calculate the position of node [b] preserving relative positioning
+//assuming node [a] is the center of the chart, [b] will be centered on an edge
+//[k], [m], [dx], and [dy] are scaling factors
 function calculateOverlayPosition(a, b, k, m, dx, dy) {
     var ax = a.x,
         ay = a.y,
@@ -660,6 +699,8 @@ function calculateOverlayPosition(a, b, k, m, dx, dy) {
     return [posx, posy];
 }
 
+//helper function or absolute pixel positions, nodes [a] and [b]
+//with scaling factor [r]
 function calculateOverlayPositionAbsolute(a, b, r) {
     //smaller r means closer to center
     var ax = a.x,
@@ -696,7 +737,7 @@ if (hash != "" && hash != null && hash != undefined && hash != "#") {
     backgroundClick();
 }
 
-
+//heper function or copying [str] to the clipboard
 function copyToClipboard(str) {
     const el = document.createElement('textarea');
     el.value = str;
