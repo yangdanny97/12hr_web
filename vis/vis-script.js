@@ -96,7 +96,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["friendswithbenefits", "friendswithex", "giving", "horizons", "ldr", "right", "roses", "sex", "soulmates", "talking", "waldo", "walls"]
+        "carousel": ["fire","breakups","breakups2","yield","playground","friendswithbenefits", "friendswithex", "giving", "horizons", "ldr", "right", "roses", "sex", "soulmates", "talking", "waldo", "walls"]
         // ^ for depth 2 nodes: list of images to display in carousel
     },
     {
@@ -107,7 +107,7 @@ let nodes = [{
         "brush": "#FF7141",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["parentchild", "sibling"]
+        "carousel": ["birds","parentchild", "sibling"]
     },
     {
         "key": 13,
@@ -117,7 +117,7 @@ let nodes = [{
         "brush": "#FFD33C",
         "background": "#FFE9DE",
         "txtcolor": "black",
-        "carousel": ["coldwarm", "emptypromises", "misalignment", "pedestal", "proximity", "stairs"]
+        "carousel": ["friends","tainting","accounting","coldwarm", "emptypromises", "misalignment", "pedestal", "proximity", "stairs"]
     },
     {
         "key": 2,
@@ -139,7 +139,7 @@ let nodes = [{
         "brush": "#7E9AFF",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["fools", "trees"]
+        "carousel": ["breadthdepth","fools", "trees"]
     },
     {
         "key": 22,
@@ -149,7 +149,7 @@ let nodes = [{
         "brush": "#8CE3F3",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["confirmation", "correlation", "decoy", "forbidden", "proportion"]
+        "carousel": ["chunking","merit","worth","confirmation", "correlation", "decoy", "forbidden", "proportion"]
     },
     {
         "key": 23,
@@ -159,7 +159,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#E4FAFF",
         "txtcolor": "black",
-        "carousel": ["execution", "productivitycreativity", "tasking"]
+        "carousel": ["pyramid","loop","execution", "productivitycreativity", "tasking"]
     },
     {
         "key": 3,
@@ -181,7 +181,7 @@ let nodes = [{
         "brush": "#FFFC33",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["breakfree", "fears", "heartofgold", "lifeapproaches", "path", "values", "voice"]
+        "carousel": ["pleasure","breakfree", "fears", "heartofgold", "lifeapproaches", "path", "values", "voice"]
     },
     {
         "key": 32,
@@ -191,7 +191,7 @@ let nodes = [{
         "brush": "#5BDD5B",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["devotion", "scarecrow", "songs", "time"]
+        "carousel": ["travel","turtles","sonder","drunk","plans","drugs","devotion", "scarecrow", "songs", "time"]
     },
     {
         "key": 33,
@@ -201,7 +201,7 @@ let nodes = [{
         "brush": "#B3DC4E",
         "background": "#F4FFE7",
         "txtcolor": "black",
-        "carousel": ["closure", "elephant", "forgiving", "names", "onions", "peer pressure", "sadness", "sayingthenicething"]
+        "carousel": ["lettinggo","switch","deepend","closure", "elephant", "forgiving", "names", "onions", "peerpressure", "sadness", "sayingthenicething"]
     }
 ];
 
